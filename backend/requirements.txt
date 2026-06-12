@@ -1,4 +1,6 @@
 Flask
+Flask-Bcrypt
+bcrypt
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Cors
