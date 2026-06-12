@@ -99,4 +99,8 @@ def create_app(config_class='config.Config'):
     def health():
         return jsonify({"status": "healthy", "message": "CareerAI Navigator API is online"}), 200
         
+    @app.route("/")
+    def home():
+        return {"status":"ok","message":"CareerAI Backend Running"}
+        
     return app

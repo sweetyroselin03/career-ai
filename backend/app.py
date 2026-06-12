@@ -1,11 +1,9 @@
-import os
 from app import create_app
 
 app = create_app()
 
-if __name__ == '__main__':
-    # Ensure upload folder exists
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    
-    # Run server
-    app.run(debug=True, host='0.0.0.0', port=5000)
+print("URL Map on startup:")
+print(app.url_map)
+
+if __name__ == "__main__":
+    app.run()
