@@ -1,4 +1,5 @@
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 
 export interface RoadmapResponse {
   title: string;
@@ -32,7 +33,7 @@ export const aiService = {
    * Send a general message to the career assistant chatbot.
    */
   chat: async (message: string): Promise<string> => {
-    const response = await apiFetch('http://localhost:5000/api/ai/chat', {
+    const response = await apiFetch(`${API_URL}/api/ai/chat`, {
       method: 'POST',
       body: JSON.stringify({ message }),
     });
@@ -52,7 +53,7 @@ export const aiService = {
     profile?: any,
     skills?: string[]
   ): Promise<RoadmapResponse> => {
-    const response = await apiFetch('http://localhost:5000/api/ai/roadmap', {
+    const response = await apiFetch(`${API_URL}/api/ai/roadmap`, {
       method: 'POST',
       body: JSON.stringify({
         target_career: targetCareer,
@@ -75,7 +76,7 @@ export const aiService = {
     targetCareer: string,
     currentSkills?: string[]
   ): Promise<SkillGapResponse> => {
-    const response = await apiFetch('http://localhost:5000/api/ai/skill-gap', {
+    const response = await apiFetch(`${API_URL}/api/ai/skill-gap`, {
       method: 'POST',
       body: JSON.stringify({
         target_career: targetCareer,
@@ -94,7 +95,7 @@ export const aiService = {
    * Get feedback, strengths, weaknesses, and ATS suggestions for a resume.
    */
   getResumeFeedback: async (resumeText: string): Promise<ResumeFeedbackResponse> => {
-    const response = await apiFetch('http://localhost:5000/api/ai/resume-feedback', {
+    const response = await apiFetch(`${API_URL}/api/ai/resume-feedback`, {
       method: 'POST',
       body: JSON.stringify({ resume_text: resumeText }),
     });

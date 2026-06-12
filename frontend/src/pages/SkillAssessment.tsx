@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { 
   ResponsiveContainer, 
   RadarChart, 
@@ -34,7 +35,7 @@ const SkillAssessment: React.FC = () => {
     const fetchData = async () => {
       try {
         // Fetch all skills
-        const skillsRes = await apiFetch('http://localhost:5000/api/profile/skills');
+        const skillsRes = await apiFetch(`${API_URL}/api/profile/skills`);
         let allSkills: any[] = [];
         if (skillsRes.ok) {
           allSkills = await skillsRes.json();
@@ -42,7 +43,7 @@ const SkillAssessment: React.FC = () => {
         }
 
         // Fetch user profile
-        const profileRes = await apiFetch('http://localhost:5000/api/profile/');
+        const profileRes = await apiFetch(`${API_URL}/api/profile/`);
         if (profileRes.ok) {
           const profileData = await profileRes.json();
           const userSkills = profileData.skills || {};
@@ -82,7 +83,7 @@ const SkillAssessment: React.FC = () => {
         }
       });
 
-      const res = await apiFetch('http://localhost:5000/api/profile/', {
+      const res = await apiFetch(`${API_URL}/api/profile/`, {
         method: 'POST',
         body: JSON.stringify({
           skills: activeSkillsPayload

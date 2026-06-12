@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 import { 
   User as UserIcon, 
   Mail, 
@@ -71,7 +72,7 @@ const Register: React.FC = () => {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/profile/skills');
+        const res = await fetch(`${API_URL}/api/profile/skills`);
         if (res.ok) {
           const data = await res.json();
           setAvailableSkills(prev => {
@@ -180,7 +181,7 @@ const Register: React.FC = () => {
 
     try {
       // 1. Submit Core User Registration
-      const regRes = await fetch('http://localhost:5000/api/auth/register', {
+      const regRes = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -205,7 +206,7 @@ const Register: React.FC = () => {
         skillsPayload[s] = 60; // Initial default score
       });
 
-      const profRes = await fetch('http://localhost:5000/api/profile/', {
+      const profRes = await fetch(`${API_URL}/api/profile/`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

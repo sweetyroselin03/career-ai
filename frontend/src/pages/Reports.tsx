@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { 
   FileText, 
   Download, 
@@ -19,13 +20,13 @@ const Reports: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const recRes = await apiFetch('http://localhost:5000/api/recommendations/');
+        const recRes = await apiFetch(`${API_URL}/api/recommendations/`);
         if (recRes.ok) {
           const data = await recRes.json();
           setRecommendations(data.recommendations || []);
         }
 
-        const profRes = await apiFetch('http://localhost:5000/api/profile/');
+        const profRes = await apiFetch(`${API_URL}/api/profile/`);
         if (profRes.ok) {
           const profData = await profRes.json();
           setUserProfile(profData);
@@ -41,7 +42,7 @@ const Reports: React.FC = () => {
 
   const handleDownloadPDF = async () => {
     try {
-      const res = await apiFetch('http://localhost:5000/api/recommendations/download-pdf');
+      const res = await apiFetch(`${API_URL}/api/recommendations/download-pdf`);
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

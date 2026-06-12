@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { 
   FileText, 
   UploadCloud, 
@@ -22,7 +23,7 @@ const ResumeAnalyzer: React.FC = () => {
   React.useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/resume/latest');
+        const res = await apiFetch(`${API_URL}/api/resume/latest`);
         if (res.ok) {
           const data = await res.json();
           if (data.analysis) {
@@ -84,7 +85,7 @@ const ResumeAnalyzer: React.FC = () => {
     formData.append('file', file);
     
     try {
-      const res = await apiFetch('http://localhost:5000/api/resume/upload', {
+      const res = await apiFetch(`${API_URL}/api/resume/upload`, {
         method: 'POST',
         body: formData
       });

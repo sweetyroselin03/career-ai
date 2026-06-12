@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { User, GraduationCap, Code, Heart, Target, Save, Plus, X, Sparkles } from 'lucide-react';
 
 const TECHNICAL_SKILLS = [
@@ -51,7 +52,7 @@ const Profile: React.FC = () => {
     // Fetch current profile data
     const fetchProfile = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/profile/');
+        const res = await apiFetch(`${API_URL}/api/profile/`);
         if (res.ok) {
           const data = await res.json();
           setAge(data.age || '');
@@ -117,7 +118,7 @@ const Profile: React.FC = () => {
     };
 
     try {
-      const res = await apiFetch('http://localhost:5000/api/profile/', {
+      const res = await apiFetch(`${API_URL}/api/profile/`, {
         method: 'POST',
         body: JSON.stringify(payload)
       });

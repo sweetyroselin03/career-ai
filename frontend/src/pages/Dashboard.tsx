@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { Link } from 'react-router-dom';
 import { 
   ResponsiveContainer, 
@@ -42,7 +43,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const profileRes = await apiFetch('http://localhost:5000/api/profile/');
+        const profileRes = await apiFetch(`${API_URL}/api/profile/`);
         
         let profileData = null;
         if (profileRes.ok) {
@@ -52,7 +53,7 @@ const Dashboard: React.FC = () => {
         
         // Fetch recommendations if profile has skills
         if (profileData && Object.keys(profileData.skills || {}).length > 0) {
-          const recsRes = await apiFetch('http://localhost:5000/api/recommendations/');
+          const recsRes = await apiFetch(`${API_URL}/api/recommendations/`);
           if (recsRes.ok) {
             const recsData = await recsRes.json();
             setRecommendations(recsData.recommendations || []);

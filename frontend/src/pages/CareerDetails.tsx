@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { 
   ArrowLeft, 
   DollarSign, 
@@ -35,7 +36,7 @@ const CareerDetails: React.FC = () => {
   useEffect(() => {
     const fetchCareerDetail = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/recommendations/');
+        const res = await apiFetch(`${API_URL}/api/recommendations/`);
         
         if (res.ok) {
           const data = await res.json();

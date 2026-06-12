@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config/api';
 import { 
   Trash2, 
   PlusCircle, 
@@ -43,7 +44,7 @@ const AdminDashboard: React.FC = () => {
     setIsLoading(true);
     try {
       // 1. Fetch Stats
-      const statsRes = await fetch('http://localhost:5000/api/admin/stats', {
+      const statsRes = await fetch(`${API_URL}/api/admin/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (statsRes.ok) {
@@ -52,7 +53,7 @@ const AdminDashboard: React.FC = () => {
       }
 
       // 2. Fetch Users
-      const usersRes = await fetch('http://localhost:5000/api/admin/users', {
+      const usersRes = await fetch(`${API_URL}/api/admin/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (usersRes.ok) {
@@ -60,7 +61,7 @@ const AdminDashboard: React.FC = () => {
       }
 
       // 3. Fetch Careers
-      const careersRes = await fetch('http://localhost:5000/api/admin/careers', {
+      const careersRes = await fetch(`${API_URL}/api/admin/careers`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (careersRes.ok) {
@@ -68,7 +69,7 @@ const AdminDashboard: React.FC = () => {
       }
 
       // 4. Fetch Skills
-      const skillsRes = await fetch('http://localhost:5000/api/admin/skills', {
+      const skillsRes = await fetch(`${API_URL}/api/admin/skills`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (skillsRes.ok) {
@@ -76,7 +77,7 @@ const AdminDashboard: React.FC = () => {
       }
 
       // 5. Fetch Courses
-      const coursesRes = await fetch('http://localhost:5000/api/admin/courses', {
+      const coursesRes = await fetch(`${API_URL}/api/admin/courses`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (coursesRes.ok) {
@@ -98,7 +99,7 @@ const AdminDashboard: React.FC = () => {
   const handleUpdateRole = async (userId: number, currentRole: string) => {
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/role`, {
+      const res = await fetch(`${API_URL}/api/admin/users/${userId}/role`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ const AdminDashboard: React.FC = () => {
   const handleDeleteUser = async (userId: number) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+      const res = await fetch(`${API_URL}/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -137,7 +138,7 @@ const AdminDashboard: React.FC = () => {
   const handleCreateCareer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/admin/careers', {
+      const res = await fetch(`${API_URL}/api/admin/careers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +160,7 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     if (!editingEntity) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/careers/${editingEntity.id}`, {
+      const res = await fetch(`${API_URL}/api/admin/careers/${editingEntity.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -180,7 +181,7 @@ const AdminDashboard: React.FC = () => {
   const handleDeleteCareer = async (careerId: number) => {
     if (!window.confirm("Delete this career profile?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/careers/${careerId}`, {
+      const res = await fetch(`${API_URL}/api/admin/careers/${careerId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -197,7 +198,7 @@ const AdminDashboard: React.FC = () => {
   const handleCreateSkill = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/admin/skills', {
+      const res = await fetch(`${API_URL}/api/admin/skills`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -219,7 +220,7 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     if (!editingEntity) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/skills/${editingEntity.id}`, {
+      const res = await fetch(`${API_URL}/api/admin/skills/${editingEntity.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -240,7 +241,7 @@ const AdminDashboard: React.FC = () => {
   const handleDeleteSkill = async (skillId: number) => {
     if (!window.confirm("Delete this skill from the dataset?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/skills/${skillId}`, {
+      const res = await fetch(`${API_URL}/api/admin/skills/${skillId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -257,7 +258,7 @@ const AdminDashboard: React.FC = () => {
   const handleCreateCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/admin/courses', {
+      const res = await fetch(`${API_URL}/api/admin/courses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -279,7 +280,7 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     if (!editingEntity) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/courses/${editingEntity.id}`, {
+      const res = await fetch(`${API_URL}/api/admin/courses/${editingEntity.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -300,7 +301,7 @@ const AdminDashboard: React.FC = () => {
   const handleDeleteCourse = async (courseId: number) => {
     if (!window.confirm("Delete this course recommendation?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/courses/${courseId}`, {
+      const res = await fetch(`${API_URL}/api/admin/courses/${courseId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
