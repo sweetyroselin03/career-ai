@@ -1,0 +1,14 @@
+Flask
+Flask-SQLAlchemy
+Flask-JWT-Extended
+Flask-Cors
+scikit-learn
+pandas
+numpy
+joblib
+PyPDF2
+python-dotenv
+psycopg2-binary
+Flask-Migrate
+Flask-Bcrypt
+groq

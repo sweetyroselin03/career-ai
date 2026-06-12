@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563EB;
+  --color-primary-dark: #1D4ED8;
+  --color-primary-light: #3B82F6;
+
+  --color-secondary: #3B82F6;
+  --color-secondary-dark: #2563EB;
+  --color-secondary-light: #60A5FA;
+
+  --color-accent: #60A5FA;
+  --color-accent-dark: #3B82F6;
+  --color-accent-light: #93C5FD;
+
+  --color-border: #E2E8F0;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+
+  /* Keep slate shades mapping for compatibility, mapped to light theme friendly tints */
+  --color-slate-350: #475569;
+  --color-slate-450: #64748B;
+  --color-slate-455: #475569;
+  --color-slate-705: #334155;
+  --color-slate-750: #1E293B;
+  --color-slate-850: #F1F5F9;
+  --color-slate-855: #F8FAFC;
+
+  --font-sans: 'Outfit', 'Inter', 'system-ui', 'sans-serif';
+}
+
+@layer base {
+  body {
+    @apply antialiased font-sans text-slate-800 transition-colors duration-300;
+    background-color: #F8FAFC;
+    color: #0F172A;
+  }
+}
+
+/* Glassmorphism Styles Redefined for Light Theme */
+.glass-card {
+  @apply bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.06)] rounded-2xl;
+}
+
+.glass-card-hover {
+  @apply transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-white;
+}
+
+.glass-panel {
+  @apply bg-white border border-slate-200 shadow-xl rounded-3xl;
+}
+
+/* Interactive Elements */
+.btn-primary {
+  @apply bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-2.5 rounded-xl shadow-md shadow-primary/10 hover:shadow-primary/20 transition-all duration-300 active:scale-95 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-all duration-300 active:scale-95 cursor-pointer;
+}
+
+.btn-accent {
+  @apply bg-secondary hover:bg-secondary-dark text-white font-semibold px-6 py-2.5 rounded-xl shadow-md shadow-secondary/10 hover:shadow-secondary/20 transition-all duration-300 active:scale-95 cursor-pointer;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 text-slate-900 placeholder-slate-400;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-350;
+}
+
+/* Background animated mesh effects - Soft Light Mode Mesh */
+.bg-mesh {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-mesh::before, .bg-mesh::after {
+  content: '';
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.08;
+  transition: all 1s ease-in-out;
+}
+
+.bg-mesh::before {
+  top: -10%;
+  left: -10%;
+  background: radial-gradient(circle, #2563eb 0%, transparent 80%);
+}
+
+.bg-mesh::after {
+  bottom: -10%;
+  right: -10%;
+  background: radial-gradient(circle, #60a5fa 0%, transparent 80%);
+}
+

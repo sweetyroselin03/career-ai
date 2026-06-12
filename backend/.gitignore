@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# React
+node_modules/
+dist/
+
+# IDE
+.vscode/
+
+# Logs
+*.log
+
+# Uploads
+uploads/
+*.pdf
