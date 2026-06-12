@@ -1,9 +1,9 @@
-from app import create_app
+# WARNING: This file is kept for local execution or fallback commands only.
+# In Python, if a package folder 'app/' and a module file 'app.py' share the same name in the same directory,
+# importing 'app' will favor the package 'app/'. Running 'gunicorn app:app' will fail.
+# Use 'gunicorn run:app' with the Root Directory set to 'backend' for deployment.
 
-app = create_app()
-
-print("URL Map on startup:")
-print(app.url_map)
+from run import app
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
