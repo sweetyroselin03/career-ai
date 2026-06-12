@@ -11,7 +11,6 @@ import {
   Brain, 
   Sparkles, 
   Target, 
-  TrendingUp, 
   GraduationCap 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,7 +22,7 @@ const floatCardVariants = {
     transition: {
       duration: 5,
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: "easeInOut" as const,
       delay: i * 1.5,
     }
   })
