@@ -7,10 +7,22 @@ from app.models import db
 
 def create_app(config_class='config.Config'):
     app = Flask(__name__)
+    @app.after_request
+    def after_request(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        return response
     app.config.from_object(config_class)
     
     # Configure CORS
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
     
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -95,12 +107,26 @@ def create_app(config_class='config.Config'):
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(ai_bp, url_prefix='/api/ai')
     
-    @app.route('/api/health', methods=['GET'])
-    def health():
-        return jsonify({"status": "healthy", "message": "CareerAI Navigator API is online"}), 200
-        
     @app.route("/")
     def home():
-        return {"status":"ok","message":"CareerAI Backend Running"}
-        
+        return {
+            "status":"ok",
+            "message":"CareerAI Backend Running"
+        }
+
+    @app.route("/api/health")
+    def health():
+        return {
+            "status":"healthy",
+            "message":"CareerAI Navigator API is online"
+        }
+
+    @app.route("/debug-render")
+    def debug_render():
+        return {
+            "message":"NEW CODE DEPLOYED",
+            "version":"2026-06-12"
+        }
+
     return app
+

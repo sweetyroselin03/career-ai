@@ -14,6 +14,7 @@ import {
   Award,
   BookOpen
 } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import Toast from '../components/Common/Toast';
 
 const AdminDashboard: React.FC = () => {
@@ -905,12 +906,16 @@ const AdminDashboard: React.FC = () => {
 
       </div>
 
-      <Toast
-        message={toast ? toast.message : ''}
-        type={toast ? toast.type : 'success'}
-        onClose={() => setToast(null)}
-        duration={3500}
-      />
+      <AnimatePresence>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+            duration={3500}
+          />
+        )}
+      </AnimatePresence>
 
     </div>
   );

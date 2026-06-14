@@ -132,3 +132,33 @@ def get_me():
         return jsonify(user.to_dict()), 200
     except Exception as e:
         return jsonify({"msg": f"Failed to retrieve user profile: {str(e)}"}), 500
+
+@auth_bp.route('/update-password', methods=['POST'])
+@jwt_required()
+def update_password():
+    try:
+        current_user_id = get_jwt_identity()
+        user = db.session.get(User, current_user_id)
+        if not user:
+            return jsonify({"msg": "User not found"}), 404
+            
+        data = request.get_json() or {}
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+        
+        if not old_password or not new_password:
+            return jsonify({"msg": "Current password and new password are required"}), 400
+            
+        if not user.check_password(old_password):
+            return jsonify({"msg": "Incorrect current password"}), 400
+            
+        if len(new_password) < 6:
+            return jsonify({"msg": "Password must be at least 6 characters long"}), 400
+            
+        user.set_password(new_password)
+        db.session.commit()
+        
+        return jsonify({"msg": "Password updated successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Failed to update password: {str(e)}"}), 500

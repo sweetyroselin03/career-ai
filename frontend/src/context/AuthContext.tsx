@@ -48,6 +48,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     cleanAlternativeTokens();
+
+    const handleUnauthorized = () => {
+      console.warn("[AuthContext] Received auth-unauthorized event. Logging out.");
+      logout();
+    };
+
+    window.addEventListener('auth-unauthorized', handleUnauthorized);
+    return () => {
+      window.removeEventListener('auth-unauthorized', handleUnauthorized);
+    };
   }, []);
 
   useEffect(() => {

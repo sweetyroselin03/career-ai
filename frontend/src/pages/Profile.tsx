@@ -104,6 +104,26 @@ const Profile: React.FC = () => {
     setIsSaving(true);
     setAlert(null);
 
+    if (age !== '') {
+      const numAge = Number(age);
+      if (isNaN(numAge) || numAge < 15 || numAge > 100) {
+        setAlert({ type: 'error', message: 'Age must be a valid number between 15 and 100.' });
+        setIsSaving(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+    }
+
+    if (cgpa !== '') {
+      const numCgpa = Number(cgpa);
+      if (isNaN(numCgpa) || numCgpa < 0 || numCgpa > 10) {
+        setAlert({ type: 'error', message: 'CGPA must be a valid number between 0.0 and 10.0.' });
+        setIsSaving(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+    }
+
     const payload = {
       age: age === '' ? null : Number(age),
       gender,

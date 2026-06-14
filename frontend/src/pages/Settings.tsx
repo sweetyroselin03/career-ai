@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { apiFetch } from '../utils/api';
+import { API_URL } from '../config/api';
 import { 
   Lock, 
   Bell, 
@@ -42,15 +44,23 @@ const Settings: React.FC = () => {
     setIsUpdatingPassword(true);
 
     try {
-      // Fetch simulated update or actual profile update password if API supported it
-      // Let's call standard password update mock
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await apiFetch(`${API_URL}/api/auth/update-password`, {
+        method: 'POST',
+        body: JSON.stringify({
+          old_password: oldPassword,
+          new_password: newPassword
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.msg || 'Failed to update password.');
+      }
       setToast({ message: 'Security password updated successfully!', type: 'success' });
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err: any) {
-      setToast({ message: 'Failed to update password. Check your parameters.', type: 'error' });
+      setToast({ message: err.message || 'Failed to update password. Check your parameters.', type: 'error' });
     } finally {
       setIsUpdatingPassword(false);
     }

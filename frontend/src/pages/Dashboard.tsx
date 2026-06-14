@@ -92,46 +92,30 @@ const Dashboard: React.FC = () => {
     ? `${recommendations[0].career_name} (${recommendations[0].match_score}%)`
     : 'N/A';
 
-  // Mock charts fallback if profile is empty
+  // Real charts data (empty if profile/skills are empty)
   const radarData = hasSkills
     ? Object.entries(userSkills).map(([name, value]) => ({ subject: name, A: value, fullMark: 100 }))
-    : [
-        { subject: 'Python', A: 85, fullMark: 100 },
-        { subject: 'SQL', A: 70, fullMark: 100 },
-        { subject: 'Statistics', A: 65, fullMark: 100 },
-        { subject: 'Data Science', A: 75, fullMark: 100 },
-        { subject: 'Teamwork', A: 80, fullMark: 100 },
-        { subject: 'Communication', A: 90, fullMark: 100 }
-      ];
+    : [];
 
   const barData = recommendations.length > 0
     ? recommendations.map(r => ({ name: r.career_name, score: r.match_score }))
-    : [
-        { name: 'Data Scientist', score: 88 },
-        { name: 'ML Engineer', score: 82 },
-        { name: 'Data Analyst', score: 75 },
-        { name: 'Software Engineer', score: 70 },
-        { name: 'Product Manager', score: 65 }
-      ];
+    : [];
 
   const pieData = profile?.interests && profile.interests.length > 0
     ? profile.interests.map((interest: string, idx: number) => ({ name: interest, value: 30 - idx * 2 }))
-    : [
-        { name: 'AI & ML', value: 40 },
-        { name: 'Software Dev', value: 30 },
-        { name: 'Data Analytics', value: 20 },
-        { name: 'Design', value: 10 }
-      ];
+    : [];
 
-  // Learning progress roadmap (simulated data based on 30-60-90 milestone dates)
-  const lineData = [
-    { name: 'Day 1', progress: 5 },
-    { name: 'Day 15', progress: 20 },
-    { name: 'Day 30', progress: 45 },
-    { name: 'Day 45', progress: 60 },
-    { name: 'Day 60', progress: 75 },
-    { name: 'Day 90', progress: 95 }
-  ];
+  // Learning progress roadmap (simulated data based on 30-60-90 milestone dates if recommendation exists)
+  const lineData = recommendations.length > 0
+    ? [
+        { name: 'Day 1', progress: 5 },
+        { name: 'Day 15', progress: 20 },
+        { name: 'Day 30', progress: 45 },
+        { name: 'Day 45', progress: 60 },
+        { name: 'Day 60', progress: 75 },
+        { name: 'Day 90', progress: 95 }
+      ]
+    : [];
 
   return (
     <div className="space-y-6">
@@ -227,20 +211,38 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <h3 className="font-bold text-sm text-slate-800">Skill Web Analysis</h3>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 uppercase font-semibold">
-              {hasSkills ? 'Live Data' : 'Demo Profile'}
+              Skill Profile
             </span>
           </div>
           
           <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                <PolarGrid stroke="#E2E8F0" opacity={0.8} />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 10, fontWeight: 'semibold' }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#64748B', fontSize: 9 }} />
-                <Radar name="Proficiency" dataKey="A" stroke="#2563EB" fill="#2563EB" fillOpacity={0.15} />
-                <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
-              </RadarChart>
-            </ResponsiveContainer>
+            {hasSkills ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                  <PolarGrid stroke="#E2E8F0" opacity={0.8} />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 10, fontWeight: 'semibold' }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#64748B', fontSize: 9 }} />
+                  <Radar name="Proficiency" dataKey="A" stroke="#2563EB" fill="#2563EB" fillOpacity={0.15} />
+                  <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                </RadarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center text-center space-y-4">
+                <div className="p-4 bg-slate-50 rounded-xl text-slate-400">
+                  <Activity className="w-8 h-8 animate-pulse text-primary" />
+                </div>
+                <div className="max-w-xs space-y-1">
+                  <h4 className="text-xs font-bold text-slate-800">No Skill Data Available</h4>
+                  <p className="text-[10px] text-slate-500 leading-relaxed">
+                    Add your expertise skills in the profile tab to calculate your professional capability web.
+                  </p>
+                </div>
+                <Link to="/profile" className="btn-primary py-2 px-4 text-[10px] inline-flex items-center space-x-1.5 shadow-sm">
+                  <span>Go to Profile</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
@@ -299,19 +301,33 @@ const Dashboard: React.FC = () => {
             Match Percentage Analysis
           </h3>
           <div className="h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData}>
-                <CartesianGrid stroke="#E2E8F0" opacity={0.6} vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 100]} />
-                <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
-                <Bar dataKey="score" radius={[8, 8, 0, 0]}>
-                  {barData.map((_entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            {recommendations.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barData}>
+                  <CartesianGrid stroke="#E2E8F0" opacity={0.6} vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                  <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                  <Bar dataKey="score" radius={[8, 8, 0, 0]}>
+                    {barData.map((_entry: any, index: number) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center text-center space-y-2">
+                <div className="p-2.5 bg-slate-50 rounded-xl text-slate-400">
+                  <Trophy className="w-5 h-5 text-primary" />
+                </div>
+                <div className="max-w-[180px] space-y-1">
+                  <h4 className="text-[10px] font-bold text-slate-800">No Career Matches</h4>
+                  <p className="text-[9px] text-slate-500 leading-normal">
+                    Complete your skill assessment to display your career matches comparison chart.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -321,33 +337,49 @@ const Dashboard: React.FC = () => {
             Interest Domain Breakdown
           </h3>
           <div className="h-56 w-full flex items-center justify-center">
-            <div className="w-[60%] h-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    innerRadius={50}
-                    outerRadius={70}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {pieData.map((_entry: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            
-            <div className="w-[40%] flex flex-col justify-center space-y-2.5">
-              {pieData.slice(0, 4).map((entry: any, index: number) => (
-                <div key={entry.name} className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                  <span className="text-[10px] font-semibold truncate max-w-[90px] text-slate-700">{entry.name}</span>
+            {pieData.length > 0 ? (
+              <>
+                <div className="w-[60%] h-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={3}
+                        dataKey="value"
+                      >
+                        {pieData.map((_entry: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                    </PieChart>
+                  </ResponsiveContainer>
                 </div>
-              ))}
-            </div>
+                
+                <div className="w-[40%] flex flex-col justify-center space-y-2.5">
+                  {pieData.slice(0, 4).map((entry: any, index: number) => (
+                    <div key={entry.name} className="flex items-center space-x-2">
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                      <span className="text-[10px] font-semibold truncate max-w-[90px] text-slate-700">{entry.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center text-center space-y-2">
+                <div className="p-2.5 bg-slate-50 rounded-xl text-slate-400">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </div>
+                <div className="max-w-[180px] space-y-1">
+                  <h4 className="text-[10px] font-bold text-slate-800">No Interests Selected</h4>
+                  <p className="text-[9px] text-slate-500 leading-normal">
+                    Specify interests in profile settings to visualize your domain breakdown.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -357,15 +389,29 @@ const Dashboard: React.FC = () => {
             Roadmap Milestones Progress
           </h3>
           <div className="h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineData}>
-                <CartesianGrid stroke="#E2E8F0" opacity={0.6} vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 100]} />
-                <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
-                <Line type="monotone" dataKey="progress" stroke="#2563EB" strokeWidth={3} dot={{ fill: '#2563EB', r: 4 }} activeDot={{ r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            {recommendations.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={lineData}>
+                  <CartesianGrid stroke="#E2E8F0" opacity={0.6} vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: '#64748B' }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                  <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', fontSize: '11px', color: '#0F172A', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                  <Line type="monotone" dataKey="progress" stroke="#2563EB" strokeWidth={3} dot={{ fill: '#2563EB', r: 4 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center text-center space-y-2">
+                <div className="p-2.5 bg-slate-50 rounded-xl text-slate-400">
+                  <Activity className="w-5 h-5 text-primary" />
+                </div>
+                <div className="max-w-[180px] space-y-1">
+                  <h4 className="text-[10px] font-bold text-slate-800">No Active Roadmap</h4>
+                  <p className="text-[9px] text-slate-500 leading-normal">
+                    Generate recommendations and roadmaps to view upskilling milestone progress.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

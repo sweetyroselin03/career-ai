@@ -206,7 +206,7 @@ const Recommendations: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {activeRec.gap_analysis.report.map((item: any) => {
-                  const isAvail = item.status === 'available';
+                  const isAvail = item.status === 'strong' || item.status === 'weak';
                   return (
                     <div key={item.skill_name} className="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850/70 rounded-xl">
                       <span className="text-xs font-semibold">{item.skill_name}</span>

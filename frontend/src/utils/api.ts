@@ -14,16 +14,22 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
     delete headers['Content-Type'];
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
 
-  if (response.status === 401) {
-    console.warn("[API] Received 401 Unauthorized from backend. Clearing invalid token.");
-    // Do not clear token immediately on startup checks unless it's a real expired event,
-    // but log it to console to assist manual testing.
+    if (response.status === 401) {
+      console.warn(`[API] Received 401 Unauthorized from: ${options.method || 'GET'} ${url}. Dispatching auth-unauthorized event.`);
+      window.dispatchEvent(new CustomEvent('auth-unauthorized'));
+    } else if (!response.ok) {
+      console.error(`[API] Fetch failed. Status: ${response.status} (${response.statusText}) for ${options.method || 'GET'} ${url}`);
+    }
+
+    return response;
+  } catch (error: any) {
+    console.error(`[API] Network or connection error for ${options.method || 'GET'} ${url}:`, error.message || error);
+    throw error;
   }
-
-  return response;
 };

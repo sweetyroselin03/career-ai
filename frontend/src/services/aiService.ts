@@ -33,14 +33,14 @@ export const aiService = {
    * Send a general message to the career assistant chatbot.
    */
   chat: async (message: string): Promise<string> => {
-    const response = await apiFetch(`${API_URL}/api/ai/chat`, {
+    const response = await apiFetch(`${API_URL}/api/chatbot/message`, {
       method: 'POST',
       body: JSON.stringify({ message }),
     });
 
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to get AI career advice.');
+      throw new Error(data.response || data.error || 'Failed to get AI career advice.');
     }
     return data.response;
   },

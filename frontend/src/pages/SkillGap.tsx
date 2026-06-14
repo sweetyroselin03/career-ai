@@ -89,7 +89,7 @@ const SkillGap: React.FC = () => {
   // Group skills by status
   const strongSkills = gapReport.filter((item: any) => item.status === 'strong');
   const weakSkills = gapReport.filter((item: any) => item.status === 'weak');
-  const missingSkills = gapReport.filter((item: any) => item.status === 'missing' || item.status === 'available' ? false : true).filter((item: any) => item.status !== 'strong' && item.status !== 'weak');
+  const missingSkills = gapReport.filter((item: any) => item.status === 'missing');
 
   // Format data for Recharts Bar Chart
   const barData = gapReport.map((item: any) => ({
