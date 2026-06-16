@@ -17,11 +17,13 @@ def create_app(config_class='config.Config'):
     # -----------------------------------------------------------
     CORS(
         app,
-        resources={r"/api/*": {
+        resources={r"/*": {
             "origins": [
                 "http://localhost:5173",
                 "http://localhost:5174",
-                "https://career-ai-rho-rouge.vercel.app"
+                "https://career-ai-rho-rouge.vercel.app",
+                "https://career-ai-git-main-sweetyroselin03-projects.vercel.app",
+                "https://career-6nyu3fe8g-sweetyroselin03-projects.vercel.app"
             ],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
@@ -105,6 +107,14 @@ def create_app(config_class='config.Config'):
 
             tables = inspector.get_table_names()
             print(f"[STARTUP] Tables: {', '.join(tables)}")
+
+            # Startup Diagnostics
+            from flask import current_app
+            print(f"[STARTUP DIAGNOSTICS] Current app name: {current_app.name}")
+            print(f"[STARTUP DIAGNOSTICS] Registered blueprints: {list(current_app.blueprints.keys())}")
+            print("[STARTUP DIAGNOSTICS] Registered URL Map rules:")
+            for rule in current_app.url_map.iter_rules():
+                print(f"  {rule}")
 
         except Exception as e:
             print(f"[STARTUP ERROR] Database init failed: {e}")
@@ -218,7 +228,7 @@ def create_app(config_class='config.Config'):
     # -----------------------------------------------------------
     from app.routes.auth import auth_bp
     from app.routes.profile import profile_bp
-    from app.routes.recommendations import rec_bp
+    from app.routes.recommendations import recommendation_bp
     from app.routes.resume import resume_bp
     from app.routes.chatbot import chatbot_bp
     from app.routes.admin import admin_bp
@@ -226,7 +236,7 @@ def create_app(config_class='config.Config'):
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(profile_bp, url_prefix='/api/profile')
-    app.register_blueprint(rec_bp, url_prefix='/api/recommendations')
+    app.register_blueprint(recommendation_bp, url_prefix='/api/recommendations')
     app.register_blueprint(resume_bp, url_prefix='/api/resume')
     app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
@@ -259,6 +269,14 @@ def create_app(config_class='config.Config'):
         return {
             "message": "NEW CODE DEPLOYED",
             "version": "2026-06-14-v2"
+        }
+
+    @app.route("/deployment-check")
+    def deployment_check():
+        return {
+            "status": "ok",
+            "environment": "render",
+            "app": "career-ai"
         }
 
     return app

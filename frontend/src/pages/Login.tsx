@@ -77,7 +77,11 @@ const Login: React.FC = () => {
       setOtpSent(true);
       setToast({ message: 'Login OTP code sent successfully!', type: 'success' });
     } catch (err: any) {
-      setToast({ message: err.message || 'Failed to send OTP.', type: 'error' });
+      console.error("[Login SendOtp Error]", err);
+      const msg = err.message === 'Failed to fetch'
+        ? `Failed to connect to backend at ${API_URL}/api/auth/send-otp. Please ensure the backend is running and CORS is configured.`
+        : err.message || 'Failed to send OTP.';
+      setToast({ message: msg, type: 'error' });
     } finally {
       setIsSendingOtp(false);
     }
@@ -146,8 +150,12 @@ const Login: React.FC = () => {
       console.log("[DEBUG] Navigation triggered: /login → /dashboard");
       navigate('/dashboard');
     } catch (err: any) {
-      console.error("[DEBUG] Login failed:", err);
-      setToast({ message: err.message || 'Network error occurred.', type: 'error' });
+      console.error("[Login Submit Error]", err);
+      const endpoint = loginMode === 'password' ? 'login' : 'login-otp';
+      const msg = err.message === 'Failed to fetch'
+        ? `Failed to connect to backend at ${API_URL}/api/auth/${endpoint}. Please ensure the backend is running and CORS is configured.`
+        : err.message || 'Network error occurred.';
+      setToast({ message: msg, type: 'error' });
     } finally {
       setIsSubmitting(false);
     }

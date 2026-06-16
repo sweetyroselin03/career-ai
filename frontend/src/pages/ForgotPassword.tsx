@@ -34,7 +34,11 @@ const ForgotPassword: React.FC = () => {
 
       setStep('reset');
     } catch (err: any) {
-      setError(err.message || 'Network error');
+      console.error("[ForgotPassword RequestOtp Error]", err);
+      const msg = err.message === 'Failed to fetch'
+        ? `Failed to connect to backend at ${API_URL}/api/auth/forgot-password-otp. Please ensure the backend is running and CORS is configured.`
+        : err.message || 'Network error';
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -76,7 +80,11 @@ const ForgotPassword: React.FC = () => {
       setSuccessMsg(data.msg || 'Your password has been reset successfully.');
       setStep('success');
     } catch (err: any) {
-      setError(err.message || 'Network error');
+      console.error("[ForgotPassword ResetPassword Error]", err);
+      const msg = err.message === 'Failed to fetch'
+        ? `Failed to connect to backend at ${API_URL}/api/auth/reset-password-otp. Please ensure the backend is running and CORS is configured.`
+        : err.message || 'Network error';
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }

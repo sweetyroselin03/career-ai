@@ -6,6 +6,7 @@ import io
 import json
 
 rec_bp = Blueprint('recommendations', __name__)
+recommendation_bp = rec_bp
 recommender = CareerRecommender()
 
 # Lookup mapping for dynamic upskilling resources
