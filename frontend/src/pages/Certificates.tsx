@@ -75,8 +75,8 @@ const Certificates: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">Certifications & Credentials</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Certifications & Credentials</h1>
+          <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
             Store, audit, and showcase your professional credentials and verification indexes
           </p>
         </div>
@@ -105,13 +105,13 @@ const Certificates: React.FC = () => {
               className="lg:col-span-1 space-y-4"
             >
               <div className="glass-card p-6 space-y-4">
-                <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2">
                   New Certification Credential
                 </h3>
                 
                 <form onSubmit={handleAddCert} className="space-y-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Certification Name</label>
+                    <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Certification Name</label>
                     <input
                       type="text"
                       required
@@ -123,7 +123,7 @@ const Certificates: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Issuing Organization</label>
+                    <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Issuing Organization</label>
                     <input
                       type="text"
                       required
@@ -135,18 +135,18 @@ const Certificates: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Issue Date</label>
+                    <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Issue Date</label>
                     <input
                       type="date"
                       required
                       value={issueDate}
                       onChange={(e) => setIssueDate(e.target.value)}
-                      className="form-input text-xs text-slate-300"
+                      className="form-input text-xs text-slate-900 dark:text-slate-200"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Credential ID (Optional)</label>
+                    <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Credential ID (Optional)</label>
                     <input
                       type="text"
                       placeholder="e.g. DOC-987-XYZ"
@@ -157,7 +157,7 @@ const Certificates: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Verification URL (Optional)</label>
+                    <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Verification URL (Optional)</label>
                     <input
                       type="url"
                       placeholder="e.g. https://verify.docker.com/..."
@@ -183,28 +183,28 @@ const Certificates: React.FC = () => {
         <div className={showAddForm ? "lg:col-span-2 space-y-4" : "lg:col-span-3 space-y-4"}>
           
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2">
               Verified Credential Repository
             </h3>
             
             {certs.length === 0 ? (
-              <div className="p-8 text-center border border-dashed border-slate-800 rounded-2xl">
-                <Award className="w-12 h-12 text-slate-500 mx-auto animate-pulse mb-3" />
-                <h4 className="font-bold text-xs text-slate-400">No Credentials Stored</h4>
-                <p className="text-[10px] text-slate-500 mt-1">Add details of your courses and licenses above.</p>
+              <div className="p-8 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+                <Award className="w-12 h-12 text-slate-400 dark:text-slate-600 mx-auto animate-pulse mb-3" />
+                <h4 className="font-bold text-xs text-slate-900 dark:text-white font-extrabold">No Credentials Stored</h4>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1">Add details of your courses and licenses above.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {certs.map((c) => (
-                  <div key={c.id} className="p-4 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850/65 rounded-xl flex items-start justify-between gap-4">
+                  <div key={c.id} className="p-4 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl flex items-start justify-between gap-4">
                     <div className="flex items-start space-x-3.5">
                       <div className="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center flex-shrink-0 mt-0.5">
                         <Award className="w-5 h-5" />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="font-bold text-xs leading-snug">{c.name}</h4>
-                        <p className="text-[10px] text-slate-400 font-semibold">{c.issuer}</p>
-                        <div className="flex items-center space-x-2 text-[9px] text-slate-500">
+                        <h4 className="font-bold text-xs leading-snug text-slate-900 dark:text-white">{c.name}</h4>
+                        <p className="text-[10px] text-slate-700 dark:text-slate-300 font-bold">{c.issuer}</p>
+                        <div className="flex items-center space-x-2 text-[9px] text-slate-600 dark:text-slate-400">
                           <span className="flex items-center space-x-1">
                             <Calendar className="w-3 h-3" />
                             <span>Issued: {c.date}</span>
@@ -228,7 +228,7 @@ const Certificates: React.FC = () => {
                     </div>
                     <button
                       onClick={() => handleDeleteCert(c.id)}
-                      className="p-1.5 text-slate-500 hover:text-rose-500 transition-colors hover:bg-rose-500/5 rounded-lg"
+                      className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-500/10 transition-colors rounded-lg"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

@@ -6,13 +6,18 @@ print("========== RUN.PY LOADED ==========")
 app = create_app()
 
 print("========== APP CREATED ==========")
-print(app.url_map)
 
-if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+print("\n===== REGISTERED ROUTES =====")
+for rule in app.url_map.iter_rules():
+    print(rule)
+print("=============================\n")
+
+if __name__ == "__main__":
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     app.run(
+        host="0.0.0.0",
+        port=5000,
         debug=True,
-        host='0.0.0.0',
-        port=5000
+        use_reloader=False
     )

@@ -83,8 +83,8 @@ const Recommendations: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">AI Career Recommendations</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">AI Career Recommendations</h1>
+          <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
             Machine Learning algorithms matching your skill profile vectors against career data matrices
           </p>
         </div>
@@ -101,10 +101,10 @@ const Recommendations: React.FC = () => {
 
       {recommendations.length === 0 ? (
         <div className="glass-card p-12 text-center max-w-2xl mx-auto space-y-6">
-          <Award className="w-16 h-16 text-slate-350 mx-auto animate-pulse" />
+          <Award className="w-16 h-16 text-slate-400 dark:text-slate-600 mx-auto animate-pulse" />
           <div className="space-y-2">
-            <h3 className="text-xl font-bold">Awaiting Skills Assessment</h3>
-            <p className="text-sm text-slate-450 leading-relaxed">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Awaiting Skills Assessment</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               {msg || "We need at least one skill registered to analyze matches and calculate career alignment rankings. Please visit the profile page first."}
             </p>
           </div>
@@ -120,7 +120,7 @@ const Recommendations: React.FC = () => {
           
           {/* Left Side: Career Matches Rank List */}
           <div className="lg:col-span-1 space-y-3">
-            <h3 className="px-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Top Matches</h3>
+            <h3 className="px-1 text-[10px] font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider">Top Matches</h3>
             <div className="space-y-2.5">
               {recommendations.map((rec, index) => {
                 const isActive = index === selectedRecIndex;
@@ -130,13 +130,13 @@ const Recommendations: React.FC = () => {
                     onClick={() => setSelectedRecIndex(index)}
                     className={`w-full text-left p-4 rounded-2xl transition-all duration-300 border flex items-center justify-between ${
                       isActive
-                        ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary text-slate-800 dark:text-slate-100 font-bold shadow-lg shadow-primary/5'
-                        : 'bg-white/60 dark:bg-slate-900/60 border-slate-200/50 dark:border-slate-850 hover:border-slate-300 dark:hover:border-slate-750 text-slate-600 dark:text-slate-400'
+                        ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary text-slate-950 dark:text-white font-extrabold shadow-lg shadow-primary/5'
+                        : 'bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-750 dark:text-slate-300'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center ${
-                        isActive ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                        isActive ? 'bg-primary text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                       }`}>
                         {index + 1}
                       </span>
@@ -145,7 +145,7 @@ const Recommendations: React.FC = () => {
                     
                     <div className="flex items-center space-x-1.5">
                       <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${
-                        isActive ? 'bg-primary/20 text-primary dark:text-primary-light' : 'bg-slate-100 dark:bg-slate-850 text-slate-500'
+                        isActive ? 'bg-primary/20 text-primary-dark dark:text-primary-light' : 'bg-slate-200 dark:bg-slate-850 text-slate-705 dark:text-slate-350'
                       }`}>
                         {rec.match_score}%
                       </span>
@@ -165,25 +165,25 @@ const Recommendations: React.FC = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-[10px] font-bold uppercase text-primary tracking-wide">Rank #{selectedRecIndex + 1} Recommendation</span>
-                  <h2 className="text-2xl font-black mt-0.5">{activeRec.career_name}</h2>
+                  <h2 className="text-2xl font-black mt-0.5 text-slate-900 dark:text-white">{activeRec.career_name}</h2>
                 </div>
                 <div className="text-right">
                   <span className="text-2xl font-black text-primary">{activeRec.match_score}%</span>
-                  <p className="text-[9px] text-slate-400 uppercase font-bold mt-0.5">Match Accuracy</p>
+                  <p className="text-[9px] text-slate-700 dark:text-slate-350 uppercase font-bold mt-0.5">Match Accuracy</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-850 pt-3">
+              <p className="text-xs text-slate-655 dark:text-slate-350 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
                 {activeRec.description}
               </p>
               
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-850 pt-3">
+              <div className="grid grid-cols-2 gap-4 border-t border-slate-200 dark:border-slate-800 pt-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-500">
                     <DollarSign className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[9px] text-slate-400 uppercase font-bold">Salary Range</p>
-                    <p className="text-xs font-bold">{activeRec.salary_range}</p>
+                    <p className="text-[9px] text-slate-700 dark:text-slate-350 uppercase font-bold">Salary Range</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">{activeRec.salary_range}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -191,8 +191,8 @@ const Recommendations: React.FC = () => {
                     <TrendingUp className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[9px] text-slate-400 uppercase font-bold">Job Growth</p>
-                    <p className="text-xs font-bold">{activeRec.growth_rate}</p>
+                    <p className="text-[9px] text-slate-700 dark:text-slate-350 uppercase font-bold">Job Growth</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">{activeRec.growth_rate}</p>
                   </div>
                 </div>
               </div>
@@ -200,7 +200,7 @@ const Recommendations: React.FC = () => {
 
             {/* Gap Analysis */}
             <div className="glass-card p-6 space-y-4">
-              <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
                 Skill Gap Report
               </h3>
               
@@ -208,14 +208,14 @@ const Recommendations: React.FC = () => {
                 {activeRec.gap_analysis.report.map((item: any) => {
                   const isAvail = item.status === 'strong' || item.status === 'weak';
                   return (
-                    <div key={item.skill_name} className="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850/70 rounded-xl">
-                      <span className="text-xs font-semibold">{item.skill_name}</span>
+                    <div key={item.skill_name} className="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800/70 rounded-xl">
+                      <span className="text-xs font-bold text-slate-900 dark:text-slate-200">{item.skill_name}</span>
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] text-slate-400">Score: {item.user_score}%</span>
+                        <span className="text-[10px] text-slate-600 dark:text-slate-400">Score: {item.user_score}%</span>
                         {isAvail ? (
-                          <CheckCircle2 className="w-4.5 h-4.5 text-emerald-500" />
+                          <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-500" />
                         ) : (
-                          <XCircle className="w-4.5 h-4.5 text-rose-500" />
+                          <XCircle className="w-4.5 h-4.5 text-rose-600 dark:text-rose-500" />
                         )}
                       </div>
                     </div>
@@ -226,20 +226,20 @@ const Recommendations: React.FC = () => {
 
             {/* Course Recommendations */}
             <div className="glass-card p-6 space-y-4">
-              <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
                 Recommended Upskilling Courses
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {activeRec.courses.map((course: any) => (
-                  <div key={course.name} className="p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-850/80 rounded-xl space-y-3 flex flex-col justify-between">
+                  <div key={course.name} className="p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-xl space-y-3 flex flex-col justify-between">
                     <div>
                       <div className="flex justify-between items-start">
-                        <span className="text-[9px] font-bold uppercase px-2 py-0.5 bg-primary/10 text-primary dark:text-primary-light rounded-md">
+                        <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 bg-primary/10 text-primary-dark dark:text-primary-light rounded-md">
                           {course.provider}
                         </span>
                       </div>
-                      <h4 className="font-bold text-xs mt-2 leading-tight">{course.name}</h4>
-                      <p className="text-[10px] text-slate-400 mt-1">Focus Skill: {course.category}</p>
+                      <h4 className="font-bold text-xs mt-2 leading-tight text-slate-900 dark:text-white">{course.name}</h4>
+                      <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1">Focus Skill: {course.category}</p>
                     </div>
                     {course.url && (
                       <a
@@ -259,7 +259,7 @@ const Recommendations: React.FC = () => {
 
             {/* Customized 30-60-90 Day Roadmap */}
             <div className="glass-card p-6 space-y-6">
-              <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
                 {activeRec.roadmap.title}
               </h3>
               
@@ -269,7 +269,7 @@ const Recommendations: React.FC = () => {
                 <div className="relative pl-8 space-y-1.5">
                   <div className="absolute left-[5px] top-[5px] w-4 h-4 rounded-full bg-primary border-4 border-white dark:border-slate-950"></div>
                   <h4 className="font-bold text-xs text-primary">{activeRec.roadmap.plan_30.title}</h4>
-                  <ul className="space-y-1 text-[11px] text-slate-500 dark:text-slate-400 list-disc pl-4 leading-normal">
+                  <ul className="space-y-1 text-[11px] text-slate-655 dark:text-slate-350 list-disc pl-4 leading-normal">
                     {activeRec.roadmap.plan_30.milestones.map((m: string) => (
                       <li key={m}>{m}</li>
                     ))}
@@ -280,7 +280,7 @@ const Recommendations: React.FC = () => {
                 <div className="relative pl-8 space-y-1.5">
                   <div className="absolute left-[5px] top-[5px] w-4 h-4 rounded-full bg-accent border-4 border-white dark:border-slate-950"></div>
                   <h4 className="font-bold text-xs text-accent">{activeRec.roadmap.plan_60.title}</h4>
-                  <ul className="space-y-1 text-[11px] text-slate-500 dark:text-slate-400 list-disc pl-4 leading-normal">
+                  <ul className="space-y-1 text-[11px] text-slate-655 dark:text-slate-350 list-disc pl-4 leading-normal">
                     {activeRec.roadmap.plan_60.milestones.map((m: string) => (
                       <li key={m}>{m}</li>
                     ))}
@@ -291,7 +291,7 @@ const Recommendations: React.FC = () => {
                 <div className="relative pl-8 space-y-1.5">
                   <div className="absolute left-[5px] top-[5px] w-4 h-4 rounded-full bg-secondary border-4 border-white dark:border-slate-950"></div>
                   <h4 className="font-bold text-xs text-secondary">{activeRec.roadmap.plan_90.title}</h4>
-                  <ul className="space-y-1 text-[11px] text-slate-500 dark:text-slate-400 list-disc pl-4 leading-normal">
+                  <ul className="space-y-1 text-[11px] text-slate-655 dark:text-slate-350 list-disc pl-4 leading-normal">
                     {activeRec.roadmap.plan_90.milestones.map((m: string) => (
                       <li key={m}>{m}</li>
                     ))}

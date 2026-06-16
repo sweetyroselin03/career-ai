@@ -112,9 +112,9 @@ const Reports: React.FC = () => {
   if (recommendations.length === 0) {
     return (
       <div className="glass-card p-12 text-center max-w-xl mx-auto space-y-6">
-        <FileText className="w-16 h-16 text-slate-350 mx-auto animate-pulse" />
-        <h3 className="text-xl font-bold">No Generated Reports</h3>
-        <p className="text-sm text-slate-455 leading-relaxed">
+        <FileText className="w-16 h-16 text-slate-400 dark:text-slate-600 mx-auto animate-pulse" />
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">No Generated Reports</h3>
+        <p className="text-sm text-slate-655 dark:text-slate-400 leading-relaxed">
           Please complete your profile and assessment questions to compile reports data metrics.
         </p>
         <Link to="/profile" className="btn-primary py-3 px-6 inline-flex items-center space-x-2">
@@ -133,8 +133,8 @@ const Reports: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">Reports & Exports</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Reports & Exports</h1>
+          <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
             Consolidate your academic profiles, skill vectors, and career matches into document formats
           </p>
         </div>
@@ -165,41 +165,41 @@ const Reports: React.FC = () => {
           
           {/* User Parameters Summary */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2">
               Profile Metadata
             </h3>
             
             <div className="space-y-3 text-xs leading-normal">
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-850/40 pb-2">
-                <span className="text-slate-400">Full Name:</span>
-                <span className="font-bold">{user?.name}</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/40 pb-2">
+                <span className="text-slate-700 dark:text-slate-350 font-bold">Full Name:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">{user?.name}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-850/40 pb-2">
-                <span className="text-slate-400">Email Address:</span>
-                <span className="font-bold">{user?.email}</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/40 pb-2">
+                <span className="text-slate-700 dark:text-slate-350 font-bold">Email Address:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">{user?.email}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-850/40 pb-2">
-                <span className="text-slate-400">Academic Degree:</span>
-                <span className="font-bold">{userProfile?.degree || 'N/A'}</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/40 pb-2">
+                <span className="text-slate-700 dark:text-slate-350 font-bold">Academic Degree:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">{userProfile?.degree || 'N/A'}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-850/40 pb-2">
-                <span className="text-slate-400">Branch Specialization:</span>
-                <span className="font-bold">{userProfile?.department || 'N/A'}</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/40 pb-2">
+                <span className="text-slate-700 dark:text-slate-350 font-bold">Branch Specialization:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">{userProfile?.department || 'N/A'}</span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-850/40 pb-2">
-                <span className="text-slate-400">University:</span>
-                <span className="font-bold">{userProfile?.university || 'N/A'}</span>
+              <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/40 pb-2">
+                <span className="text-slate-700 dark:text-slate-350 font-bold">University:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">{userProfile?.university || 'N/A'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Current CGPA:</span>
-                <span className="font-bold text-primary">{userProfile?.cgpa || 'N/A'} / 10.0</span>
+                <span className="text-slate-700 dark:text-slate-350 font-bold">Current CGPA:</span>
+                <span className="font-black text-primary">{userProfile?.cgpa || 'N/A'} / 10.0</span>
               </div>
             </div>
           </div>
 
           {/* User Skills Summary */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2 flex items-center justify-between">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center justify-between">
               <span>Skills Rating Summary</span>
               <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded">
                 {skillsList.length} Skills
@@ -211,9 +211,9 @@ const Reports: React.FC = () => {
                 <div key={name} className="space-y-1">
                   <div className="flex justify-between text-xs font-semibold">
                     <span className="text-slate-700 dark:text-slate-300">{name}</span>
-                    <span className="text-primary">{val}%</span>
+                    <span className="text-primary font-bold">{val}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-850 rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div className="h-full bg-primary" style={{ width: `${val}%` }}></div>
                   </div>
                 </div>
@@ -228,26 +228,26 @@ const Reports: React.FC = () => {
           
           {/* Matches List */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2">
               Top Career Match Projections
             </h3>
 
             <div className="space-y-3">
               {recommendations.map((rec, index) => (
-                <div key={rec.career_name} className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-850/60 rounded-xl space-y-2">
+                <div key={rec.career_name} className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl space-y-2">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center space-x-3">
                       <span className="w-5.5 h-5.5 rounded-lg bg-primary/10 text-primary font-black text-xs flex items-center justify-center">
                         {index + 1}
                       </span>
-                      <h4 className="font-extrabold text-xs">{rec.career_name}</h4>
+                      <h4 className="font-extrabold text-xs text-slate-900 dark:text-white">{rec.career_name}</h4>
                     </div>
                     <span className="text-xs font-black text-primary">{rec.match_score}% Match</span>
                   </div>
                   
-                  <p className="text-[10px] text-slate-400 leading-relaxed">{rec.description}</p>
+                  <p className="text-[10px] text-slate-655 dark:text-slate-350 leading-relaxed">{rec.description}</p>
                   
-                  <div className="flex justify-between items-center text-[9px] text-slate-500 pt-1 border-t border-slate-150/40 dark:border-slate-800/40">
+                  <div className="flex justify-between items-center text-[9px] text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-slate-800">
                     <span>Salary: {rec.salary_range}</span>
                     <span>Growth: {rec.growth_rate}</span>
                   </div>

@@ -108,14 +108,14 @@ const ResumeAnalyzer: React.FC = () => {
       
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight">Resume ATS Analyzer</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Resume ATS Analyzer</h1>
+        <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
           Upload your resume in PDF format to compute ATS scoring metrics and find keyword improvements
         </p>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-semibold rounded-xl flex items-center space-x-2">
+        <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold rounded-xl flex items-center space-x-2">
           <AlertCircle className="w-4.5 h-4.5" />
           <span>{error}</span>
         </div>
@@ -127,7 +127,7 @@ const ResumeAnalyzer: React.FC = () => {
         <div className="lg:col-span-1 space-y-4">
           
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
               Upload PDF
             </h3>
             
@@ -144,8 +144,8 @@ const ResumeAnalyzer: React.FC = () => {
             >
               <UploadCloud className="w-10 h-10 text-slate-400 animate-bounce" />
               <div>
-                <p className="text-xs font-bold">Drag and drop your resume</p>
-                <p className="text-[10px] text-slate-400 mt-1">Supported format: PDF only (Max 16MB)</p>
+                <p className="text-xs font-extrabold text-slate-900 dark:text-white">Drag and drop your resume</p>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1">Supported format: PDF only (Max 16MB)</p>
               </div>
               <label className="btn-secondary text-[10px] py-1.5 px-4 rounded-lg cursor-pointer">
                 <span>Browse File</span>
@@ -160,17 +160,17 @@ const ResumeAnalyzer: React.FC = () => {
 
             {/* Selected File Card */}
             {file && (
-              <div className="p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-between">
                 <div className="flex items-center space-x-3 truncate">
                   <FileText className="w-5 h-5 text-primary flex-shrink-0" />
                   <div className="truncate text-left">
-                    <p className="text-xs font-semibold truncate leading-tight">{file.name}</p>
-                    <p className="text-[9px] text-slate-400 mt-0.5">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate leading-tight">{file.name}</p>
+                    <p className="text-[9px] text-slate-600 dark:text-slate-400 mt-0.5">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setFile(null)}
-                  className="text-xs font-bold text-rose-500 hover:underline"
+                  className="text-xs font-bold text-rose-600 dark:text-rose-455 hover:underline"
                 >
                   Clear
                 </button>
@@ -211,45 +211,45 @@ const ResumeAnalyzer: React.FC = () => {
                 <div className="glass-card p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                   
                   {/* ATS Rating gauge */}
-                  <div className="flex flex-col items-center justify-center text-center p-4 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-850/80">
+                  <div className="flex flex-col items-center justify-center text-center p-4 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800/80">
                     <div className="relative w-28 h-28 flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="56" cy="56" r="46" stroke="#e2e8f0" strokeWidth="8" fill="transparent" className="dark:stroke-slate-800" />
                         <circle cx="56" cy="56" r="46" stroke="#2563EB" strokeWidth="8" fill="transparent" strokeDasharray="289" strokeDashoffset={289 - (289 * analysis.ats_score) / 100} className="transition-all duration-1000 ease-out" />
                       </svg>
-                      <span className="absolute text-2xl font-black">{analysis.ats_score}%</span>
+                      <span className="absolute text-2xl font-black text-slate-900 dark:text-white">{analysis.ats_score}%</span>
                     </div>
-                    <h4 className="font-bold text-xs mt-3">ATS Compatibility</h4>
-                    <p className="text-[9px] text-slate-400 mt-0.5">Calculated score weighting</p>
+                    <h4 className="font-extrabold text-xs mt-3 text-slate-900 dark:text-white">ATS Compatibility</h4>
+                    <p className="text-[9px] text-slate-600 dark:text-slate-400 mt-0.5">Calculated score weighting</p>
                   </div>
 
                   {/* Section checks */}
                   <div className="md:col-span-2 space-y-4 p-2">
-                    <h4 className="font-bold text-xs text-slate-500 dark:text-slate-455">Resume Section Analysis</h4>
+                    <h4 className="font-bold text-xs text-slate-700 dark:text-slate-300">Resume Section Analysis</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850 rounded-xl">
+                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl">
                         {analysis.sections_detected.education ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
                         ) : (
-                          <XCircle className="w-5 h-5 text-rose-500" />
+                          <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-500" />
                         )}
-                        <span className="text-xs font-semibold">Education</span>
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-200">Education</span>
                       </div>
-                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850 rounded-xl">
+                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl">
                         {analysis.sections_detected.experience ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
                         ) : (
-                          <XCircle className="w-5 h-5 text-rose-500" />
+                          <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-500" />
                         )}
-                        <span className="text-xs font-semibold">Experience</span>
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-200">Experience</span>
                       </div>
-                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850 rounded-xl">
+                      <div className="flex items-center space-x-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl">
                         {analysis.sections_detected.projects ? (
-                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                          <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
                         ) : (
-                          <XCircle className="w-5 h-5 text-rose-500" />
+                          <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-500" />
                         )}
-                        <span className="text-xs font-semibold">Projects</span>
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-200">Projects</span>
                       </div>
                     </div>
                   </div>
@@ -261,10 +261,10 @@ const ResumeAnalyzer: React.FC = () => {
                   
                   {/* Found skills */}
                   <div className="glass-card p-6 space-y-3">
-                    <h4 className="font-bold text-xs text-slate-500 dark:text-slate-455">Skills Extracted</h4>
+                    <h4 className="font-bold text-xs text-slate-700 dark:text-slate-300">Skills Extracted</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {analysis.skills_found.map((skill: string) => (
-                        <span key={skill} className="text-[10px] font-bold px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                        <span key={skill} className="text-[10px] font-black px-2.5 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded-lg">
                           {skill}
                         </span>
                       ))}
@@ -273,10 +273,10 @@ const ResumeAnalyzer: React.FC = () => {
 
                   {/* Missing keywords */}
                   <div className="glass-card p-6 space-y-3">
-                    <h4 className="font-bold text-xs text-slate-500 dark:text-slate-455">Missing Core Keywords</h4>
+                    <h4 className="font-bold text-xs text-slate-700 dark:text-slate-300">Missing Core Keywords</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {analysis.missing_keywords.map((skill: string) => (
-                        <span key={skill} className="text-[10px] font-bold px-2.5 py-1 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-lg">
+                        <span key={skill} className="text-[10px] font-black px-2.5 py-1 bg-rose-500/10 text-rose-700 dark:text-rose-400 rounded-lg">
                           {skill}
                         </span>
                       ))}
@@ -287,14 +287,14 @@ const ResumeAnalyzer: React.FC = () => {
 
                 {/* ATS Improvement Suggestions */}
                 <div className="glass-card p-6 space-y-4">
-                  <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
                     Actionable Optimization Suggestions
                   </h3>
                   <div className="space-y-2.5">
                     {analysis.suggestions.map((sug: string, idx: number) => (
-                      <div key={idx} className="flex items-start space-x-3 p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850/60 rounded-xl">
+                      <div key={idx} className="flex items-start space-x-3 p-3 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-250 dark:border-slate-800 rounded-xl">
                         <CheckSquare className="w-4.5 h-4.5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-xs text-slate-600 dark:text-slate-300 leading-normal">{sug}</span>
+                        <span className="text-xs text-slate-700 dark:text-slate-300 leading-normal">{sug}</span>
                       </div>
                     ))}
                   </div>
@@ -302,11 +302,11 @@ const ResumeAnalyzer: React.FC = () => {
 
               </motion.div>
             ) : (
-              <div className="glass-card p-12 text-center h-full flex flex-col items-center justify-center space-y-4 bg-slate-50/20 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-850">
-                <FileText className="w-16 h-16 text-slate-300 mx-auto animate-pulse" />
+              <div className="glass-card p-12 text-center h-full flex flex-col items-center justify-center space-y-4 bg-slate-50/20 dark:bg-slate-955/20 border border-slate-200 dark:border-slate-800">
+                <FileText className="w-16 h-16 text-slate-400 dark:text-slate-600 mx-auto animate-pulse" />
                 <div className="space-y-1">
-                  <h3 className="font-bold text-sm">Awaiting Resume Upload</h3>
-                  <p className="text-xs text-slate-400 px-6 max-w-sm leading-normal">
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">Awaiting Resume Upload</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 px-6 max-w-sm leading-normal">
                     Submit your resume to assess ATS scoring guidelines and receive keyword optimization advice.
                   </p>
                 </div>

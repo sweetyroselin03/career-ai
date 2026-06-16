@@ -254,6 +254,11 @@ def get_recommendations():
     db.session.commit()
     
     return jsonify({
+        "success": True,
+        "message": "Recommendations calculated successfully.",
+        "data": {
+            "recommendations": detailed_recs
+        },
         "recommendations": detailed_recs
     }), 200
 

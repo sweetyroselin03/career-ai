@@ -14,11 +14,19 @@ import {
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, CartesianGrid, Legend } from 'recharts';
 
 const SkillGap: React.FC = () => {
-  const { token, user } = useAuth();
+  const { token, user, theme } = useAuth();
+  const isDark = theme === 'dark';
   
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Dynamic Chart Theme settings
+  const gridColor = isDark ? 'rgba(51, 65, 85, 0.4)' : '#E2E8F0';
+  const labelColor = isDark ? '#94A3B8' : '#475569';
+  const tooltipBg = isDark ? '#0F172A' : '#FFFFFF';
+  const tooltipBorder = isDark ? '#1E293B' : '#E2E8F0';
+  const tooltipTextColor = isDark ? '#F1F5F9' : '#0F172A';
 
   useEffect(() => {
     const fetchRecs = async () => {
@@ -70,9 +78,9 @@ const SkillGap: React.FC = () => {
   if (recommendations.length === 0) {
     return (
       <div className="glass-card p-12 text-center max-w-xl mx-auto space-y-6">
-        <Brain className="w-16 h-16 text-slate-350 mx-auto animate-pulse" />
-        <h3 className="text-xl font-bold">Awaiting Skill Assessment</h3>
-        <p className="text-sm text-slate-450 leading-relaxed">
+        <Brain className="w-16 h-16 text-slate-400 dark:text-slate-600 mx-auto animate-pulse" />
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Awaiting Skill Assessment</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
           Please complete your profile and rate your skills so we can calculate career gaps.
         </p>
         <Link to="/profile" className="btn-primary py-3 px-6 inline-flex items-center space-x-2">
@@ -104,8 +112,8 @@ const SkillGap: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">Skill Gap Analysis</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Skill Gap Analysis</h1>
+          <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
             Compare your core capability parameters directly against industry career matrices
           </p>
         </div>
@@ -124,7 +132,7 @@ const SkillGap: React.FC = () => {
         <div className="lg:col-span-1 space-y-4">
           
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
               Select Target Career
             </h3>
             
@@ -133,15 +141,15 @@ const SkillGap: React.FC = () => {
                 <button
                   key={rec.career_name}
                   onClick={() => setSelectedIdx(idx)}
-                  className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs font-semibold flex items-center justify-between ${
+                  className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs font-semibold flex items-center justify-between cursor-pointer ${
                     idx === selectedIdx
-                      ? 'bg-primary/10 border-primary text-primary font-bold'
-                      : 'hover:bg-slate-900/40 border-slate-850 text-slate-400'
+                      ? 'bg-primary/10 border-primary text-primary-dark dark:text-primary-light font-extrabold'
+                      : 'bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-805 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-400'
                   }`}
                 >
                   <span>{rec.career_name}</span>
-                  <span className={`px-2 py-0.5 rounded-md text-[10px] ${
-                    idx === selectedIdx ? 'bg-primary/20 text-primary' : 'bg-slate-800'
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                    idx === selectedIdx ? 'bg-primary/20 text-primary-dark dark:text-primary-light' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                   }`}>
                     {rec.match_score}%
                   </span>
@@ -157,7 +165,7 @@ const SkillGap: React.FC = () => {
           
           {/* Comparison Matrix Cards */}
           <div className="glass-card p-6 space-y-6">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
               Gap Matrix for {activeRec.career_name}
             </h3>
             
@@ -166,7 +174,7 @@ const SkillGap: React.FC = () => {
               {/* Strong Skills */}
               {strongSkills.length > 0 && (
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-emerald-500 uppercase tracking-wider flex items-center space-x-1.5">
+                  <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider flex items-center space-x-1.5">
                     <CheckCircle className="w-3.5 h-3.5" />
                     <span>Strong Skills (Meeting Target)</span>
                   </h4>
@@ -174,11 +182,11 @@ const SkillGap: React.FC = () => {
                     {strongSkills.map((item: any) => (
                       <div key={item.skill_name} className="p-3.5 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between text-xs">
                         <div>
-                          <h5 className="font-bold text-slate-800 dark:text-slate-200">{item.skill_name}</h5>
-                          <p className="text-[10px] text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
+                          <h5 className="font-bold text-slate-900 dark:text-slate-200">{item.skill_name}</h5>
+                          <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
                         </div>
                         <div className="flex items-center space-x-1.5">
-                          <span className="text-[8px] font-bold bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded uppercase">Strong</span>
+                          <span className="text-[8px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded uppercase">Strong</span>
                         </div>
                       </div>
                     ))}
@@ -189,7 +197,7 @@ const SkillGap: React.FC = () => {
               {/* Weak Skills */}
               {weakSkills.length > 0 && (
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-amber-500 uppercase tracking-wider flex items-center space-x-1.5">
+                  <h4 className="text-xs font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wider flex items-center space-x-1.5">
                     <AlertCircle className="w-3.5 h-3.5" />
                     <span>Weak Skills (Needs Improvement)</span>
                   </h4>
@@ -197,19 +205,19 @@ const SkillGap: React.FC = () => {
                     {weakSkills.map((item: any) => (
                       <div key={item.skill_name} className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl flex items-center justify-between text-xs">
                         <div>
-                          <h5 className="font-bold text-slate-800 dark:text-slate-200">{item.skill_name}</h5>
-                          <p className="text-[10px] text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
-                          <p className="text-[9px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">Gap: {item.gap}%</p>
+                          <h5 className="font-bold text-slate-900 dark:text-slate-200">{item.skill_name}</h5>
+                          <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
+                          <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold mt-0.5">Gap: {item.gap}%</p>
                         </div>
                         <div className="flex items-center space-x-1.5">
                           <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                            item.priority === 'high' ? 'bg-rose-500/10 text-rose-500' :
-                            item.priority === 'medium' ? 'bg-amber-500/10 text-amber-500' :
-                            'bg-slate-500/10 text-slate-500'
+                            item.priority === 'high' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' :
+                            item.priority === 'medium' ? 'bg-amber-500/10 text-amber-705 dark:text-amber-400' :
+                            'bg-slate-500/10 text-slate-600 dark:text-slate-400'
                           }`}>
                             {item.priority} Priority
                           </span>
-                          <span className="text-[8px] font-bold bg-amber-500/10 text-amber-500 px-1.5 py-0.5 rounded uppercase">Weak</span>
+                          <span className="text-[8px] font-bold bg-amber-500/10 text-amber-705 dark:text-amber-400 px-1.5 py-0.5 rounded uppercase">Weak</span>
                         </div>
                       </div>
                     ))}
@@ -220,7 +228,7 @@ const SkillGap: React.FC = () => {
               {/* Missing Skills */}
               {missingSkills.length > 0 && (
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-rose-500 uppercase tracking-wider flex items-center space-x-1.5">
+                  <h4 className="text-xs font-bold text-rose-600 dark:text-rose-500 uppercase tracking-wider flex items-center space-x-1.5">
                     <XCircle className="w-3.5 h-3.5" />
                     <span>Missing Skills (Critical Gaps)</span>
                   </h4>
@@ -228,19 +236,19 @@ const SkillGap: React.FC = () => {
                     {missingSkills.map((item: any) => (
                       <div key={item.skill_name} className="p-3.5 bg-rose-500/5 border border-rose-500/20 rounded-xl flex items-center justify-between text-xs">
                         <div>
-                          <h5 className="font-bold text-slate-800 dark:text-slate-200">{item.skill_name}</h5>
-                          <p className="text-[10px] text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
-                          <p className="text-[9px] text-rose-600 dark:text-rose-400 font-semibold mt-0.5">Gap: {item.gap}%</p>
+                          <h5 className="font-bold text-slate-900 dark:text-slate-200">{item.skill_name}</h5>
+                          <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Your Level: {item.user_score}% (Required: {item.required_score}%)</p>
+                          <p className="text-[9px] text-rose-600 dark:text-rose-400 font-bold mt-0.5">Gap: {item.gap}%</p>
                         </div>
                         <div className="flex items-center space-x-1.5">
                           <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                            item.priority === 'high' ? 'bg-rose-500/10 text-rose-500' :
-                            item.priority === 'medium' ? 'bg-amber-500/10 text-amber-500' :
-                            'bg-slate-500/10 text-slate-500'
+                            item.priority === 'high' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' :
+                            item.priority === 'medium' ? 'bg-amber-500/10 text-amber-705 dark:text-amber-400' :
+                            'bg-slate-500/10 text-slate-600 dark:text-slate-400'
                           }`}>
                             {item.priority} Priority
                           </span>
-                          <span className="text-[8px] font-bold bg-rose-500/10 text-rose-500 px-1.5 py-0.5 rounded uppercase">Missing</span>
+                          <span className="text-[8px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 px-1.5 py-0.5 rounded uppercase">Missing</span>
                         </div>
                       </div>
                     ))}
@@ -253,20 +261,20 @@ const SkillGap: React.FC = () => {
 
           {/* Bar Chart comparing current vs required */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">
               Skill Score Comparison Chart (%)
             </h3>
             
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="#1e293b" opacity={0.2} vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} />
-                  <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} />
-                  <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid #334155' }} />
-                  <Legend wrapperStyle={{ fontSize: '10px' }} />
+                  <CartesianGrid stroke={gridColor} opacity={0.6} vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: labelColor, fontWeight: 'semibold' }} axisLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: labelColor }} axisLine={false} />
+                  <Tooltip contentStyle={{ background: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: '12px', fontSize: '11px', color: tooltipTextColor, boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                  <Legend wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
                   <Bar dataKey="Score" fill="#2563EB" radius={[4, 4, 0, 0]} name="Your Level" />
-                  <Bar dataKey="Required" fill="#94A3B8" radius={[4, 4, 0, 0]} name="Required Level" />
+                  <Bar dataKey="Required" fill={isDark ? '#475569' : '#94A3B8'} radius={[4, 4, 0, 0]} name="Required Level" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

@@ -71,8 +71,8 @@ const Settings: React.FC = () => {
       
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight">System Settings</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">System Settings</h1>
+        <p className="text-sm text-slate-655 dark:text-slate-400 mt-1">
           Manage system configurations, notification toggles, theme settings, and account passwords
         </p>
       </div>
@@ -84,19 +84,19 @@ const Settings: React.FC = () => {
           
           {/* Theme & Display Settings */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2 flex items-center space-x-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center space-x-2">
               {theme === 'dark' ? <Moon className="w-4.5 h-4.5 text-primary" /> : <Sun className="w-4.5 h-4.5 text-amber-500" />}
               <span>Theme Preferences</span>
             </h3>
-            <div className="flex items-center justify-between p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-850 rounded-xl">
+            <div className="flex items-center justify-between p-3.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-xl">
               <div>
-                <h4 className="font-bold text-xs">Light / Dark Interface Mode</h4>
-                <p className="text-[10px] text-slate-400 mt-0.5">Toggle default system rendering styling environment</p>
+                <h4 className="font-bold text-xs text-slate-900 dark:text-white">Light / Dark Interface Mode</h4>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Toggle default system rendering styling environment</p>
               </div>
               
               <button
                 onClick={toggleTheme}
-                className="btn-secondary text-xs py-1.5 px-4 rounded-xl flex items-center space-x-1.5 cursor-pointer"
+                className="btn-secondary text-xs py-1.5 px-4 rounded-xl flex items-center space-x-1.5 cursor-pointer animate-pulse"
               >
                 {theme === 'dark' ? (
                   <>
@@ -115,48 +115,48 @@ const Settings: React.FC = () => {
 
           {/* Notification Settings */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2 flex items-center space-x-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center space-x-2">
               <Bell className="w-4.5 h-4.5 text-secondary" />
               <span>Notification Parameters</span>
             </h3>
             
             <div className="space-y-3">
-              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-850 rounded-xl cursor-pointer">
+              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer">
                 <div className="space-y-0.5">
-                  <h5 className="font-bold text-xs">Career Match Analytics</h5>
-                  <p className="text-[10px] text-slate-400">Receive alerts when ML models calculate new career fits</p>
+                  <h5 className="font-bold text-xs text-slate-900 dark:text-white">Career Match Analytics</h5>
+                  <p className="text-[10px] text-slate-605 dark:text-slate-400">Receive alerts when ML models calculate new career fits</p>
                 </div>
                 <input
                   type="checkbox"
                   checked={notifyMatches}
                   onChange={(e) => setNotifyMatches(e.target.checked)}
-                  className="rounded border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
+                  className="rounded border-slate-300 dark:border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
                 />
               </label>
 
-              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-850 rounded-xl cursor-pointer">
+              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer">
                 <div className="space-y-0.5">
-                  <h5 className="font-bold text-xs">Upskilling Timeline Reminders</h5>
-                  <p className="text-[10px] text-slate-400">Receive alerts for incomplete 30-60-90 day course items</p>
+                  <h5 className="font-bold text-xs text-slate-900 dark:text-white">Upskilling Timeline Reminders</h5>
+                  <p className="text-[10px] text-slate-605 dark:text-slate-400">Receive alerts for incomplete 30-60-90 day course items</p>
                 </div>
                 <input
                   type="checkbox"
                   checked={notifyCourses}
                   onChange={(e) => setNotifyCourses(e.target.checked)}
-                  className="rounded border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
+                  className="rounded border-slate-300 dark:border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
                 />
               </label>
 
-              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-850 rounded-xl cursor-pointer">
+              <label className="flex items-start justify-between p-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer">
                 <div className="space-y-0.5">
-                  <h5 className="font-bold text-xs">Career Assistant Logs</h5>
-                  <p className="text-[10px] text-slate-400">Save active chat queries and conversation logs</p>
+                  <h5 className="font-bold text-xs text-slate-900 dark:text-white">Career Assistant Logs</h5>
+                  <p className="text-[10px] text-slate-605 dark:text-slate-400">Save active chat queries and conversation logs</p>
                 </div>
                 <input
                   type="checkbox"
                   checked={notifyChat}
                   onChange={(e) => setNotifyChat(e.target.checked)}
-                  className="rounded border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
+                  className="rounded border-slate-300 dark:border-slate-700 text-primary w-4.5 h-4.5 cursor-pointer mt-1"
                 />
               </label>
             </div>
@@ -167,14 +167,14 @@ const Settings: React.FC = () => {
         {/* Right Column: Password & Security */}
         <div className="lg:col-span-1 space-y-6">
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-sm text-slate-700 dark:text-slate-350 border-b border-slate-100 dark:border-slate-850 pb-2 flex items-center space-x-2">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-205 border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center space-x-2">
               <Lock className="w-4.5 h-4.5 text-accent" />
               <span>Update Password</span>
             </h3>
 
             <form onSubmit={handleUpdatePassword} className="space-y-3">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Current Password</label>
+                <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Current Password</label>
                 <input
                   type="password"
                   required
@@ -186,7 +186,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">New Password</label>
+                <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">New Password</label>
                 <input
                   type="password"
                   required
@@ -198,7 +198,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Confirm Password</label>
+                <label className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase">Confirm Password</label>
                 <input
                   type="password"
                   required

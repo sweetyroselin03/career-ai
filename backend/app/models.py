@@ -184,10 +184,19 @@ class UserProfile(db.Model):
     resume_path: Mapped[str] = mapped_column(db.String(255), nullable=True)
     resume_filename: Mapped[str] = mapped_column(db.String(100), nullable=True)
 
+    # Expanded Social/Professional/SaaS fields
+    github: Mapped[str] = mapped_column(db.String(255), nullable=True)
+    linkedin: Mapped[str] = mapped_column(db.String(255), nullable=True)
+    portfolio: Mapped[str] = mapped_column(db.String(255), nullable=True)
+    certifications_json: Mapped[str] = mapped_column(db.Text, default='[]')
+    projects_json: Mapped[str] = mapped_column(db.Text, default='[]')
+
     def __init__(self, user_id: int, age: int = None, gender: str = None, location: str = None, 
                  degree: str = None, department: str = None, university: str = None, 
                  cgpa: float = None, career_goals: str = None, resume_path: str = None, 
-                 resume_filename: str = None, interests_json: str = '[]'):
+                 resume_filename: str = None, interests_json: str = '[]',
+                 github: str = None, linkedin: str = None, portfolio: str = None,
+                 certifications_json: str = '[]', projects_json: str = '[]'):
         self.user_id = user_id
         self.age = age
         self.gender = gender
@@ -200,6 +209,11 @@ class UserProfile(db.Model):
         self.resume_path = resume_path
         self.resume_filename = resume_filename
         self.interests_json = interests_json
+        self.github = github
+        self.linkedin = linkedin
+        self.portfolio = portfolio
+        self.certifications_json = certifications_json
+        self.projects_json = projects_json
     
     def get_skills(self):
         # Reconstruct the skills dictionary dynamically from user_skills relationship
@@ -231,6 +245,36 @@ class UserProfile(db.Model):
     def set_interests(self, interests_list):
         self.interests_json = json.dumps(interests_list)
 
+    def get_certifications(self):
+        try:
+            return json.loads(self.certifications_json) if self.certifications_json else []
+        except Exception:
+            return []
+            
+    def set_certifications(self, certifications_list):
+        self.certifications_json = json.dumps(certifications_list)
+
+    def get_projects(self):
+        try:
+            return json.loads(self.projects_json) if self.projects_json else []
+        except Exception:
+            return []
+            
+    def set_projects(self, projects_list):
+        self.projects_json = json.dumps(projects_list)
+
+    def calculate_completion_percentage(self):
+        """Calculates profile completion percentage (0-100)"""
+        score = 20 # Base sign up score
+        if self.age: score += 10
+        if self.degree: score += 10
+        if self.get_skills(): score += 20
+        if self.get_interests(): score += 10
+        if self.resume_filename: score += 10
+        if self.github or self.linkedin or self.portfolio: score += 10
+        if self.get_certifications() or self.get_projects(): score += 10
+        return min(100, score)
+
     def to_dict(self):
         from app.models import ResumeAnalysis
         latest_analysis = ResumeAnalysis.query.filter_by(user_id=self.user_id).order_by(ResumeAnalysis.analyzed_at.desc()).first()
@@ -248,7 +292,13 @@ class UserProfile(db.Model):
             'interests': self.get_interests(),
             'career_goals': self.career_goals,
             'resume_filename': self.resume_filename,
-            'ats_score': latest_analysis.ats_score if latest_analysis else None
+            'ats_score': latest_analysis.ats_score if latest_analysis else None,
+            'github': self.github,
+            'linkedin': self.linkedin,
+            'portfolio': self.portfolio,
+            'certifications': self.get_certifications(),
+            'projects': self.get_projects(),
+            'completion_percentage': self.calculate_completion_percentage()
         }
 
 
@@ -384,3 +434,94 @@ class ResumeAnalysis(db.Model):
             'suggestions': self.get_suggestions(),
             'analyzed_at': self.analyzed_at.isoformat() if self.analyzed_at else None
         }
+
+
+class ChatSession(db.Model):
+    __tablename__ = 'chat_sessions'
+    
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    title: Mapped[str] = mapped_column(db.String(255), nullable=False, default="New Chat")
+    created_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    messages = db.relationship('ChatMessage', backref='session', cascade="all, delete-orphan", order_by="ChatMessage.created_at")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'title': self.title,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'messages': [m.to_dict() for m in self.messages]
+        }
+
+
+class ChatMessage(db.Model):
+    __tablename__ = 'chat_messages'
+    
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    session_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('chat_sessions.id', ondelete='CASCADE'), nullable=False)
+    role: Mapped[str] = mapped_column(db.String(20), nullable=False) # 'user' or 'assistant'
+    content: Mapped[str] = mapped_column(db.Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'session_id': self.session_id,
+            'role': self.role,
+            'content': self.content,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+
+class UserOTP(db.Model):
+    __tablename__ = 'user_otps'
+    
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    email: Mapped[str] = mapped_column(db.String(120), nullable=False)
+    otp: Mapped[str] = mapped_column(db.String(6), nullable=False)
+    purpose: Mapped[str] = mapped_column(db.String(50), nullable=False) # 'register', 'login', 'forgot_password'
+    created_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
+    expires_at: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)
+    verified: Mapped[bool] = mapped_column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'purpose': self.purpose,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'expires_at': self.expires_at.isoformat() if self.expires_at else None,
+            'verified': self.verified
+        }
+
+
+class UploadedDocument(db.Model):
+    __tablename__ = 'uploaded_documents'
+    
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    filename: Mapped[str] = mapped_column(db.String(255), nullable=False)
+    file_path: Mapped[str] = mapped_column(db.String(255), nullable=False)
+    file_type: Mapped[str] = mapped_column(db.String(50), nullable=True) # e.g. 'pdf', 'docx', 'txt'
+    file_size: Mapped[int] = mapped_column(db.Integer, nullable=True)
+    extracted_text: Mapped[str] = mapped_column(db.Text, nullable=True)
+    uploaded_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
+
+    # Relationship to user
+    user = db.relationship('User', backref=db.backref('uploaded_documents', cascade="all, delete-orphan"))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'filename': self.filename,
+            'file_type': self.file_type,
+            'file_size': self.file_size,
+            'uploaded_at': self.uploaded_at.isoformat() if self.uploaded_at else None
+        }
+

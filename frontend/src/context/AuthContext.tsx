@@ -40,7 +40,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const theme = 'light';
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
 
   // Track whether login() was called directly (we already have user+token from the API response).
   // When true, /api/auth/me failure must NOT clear auth state — the user is already authenticated.
@@ -61,11 +65,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    // Force light theme
     const root = window.document.documentElement;
-    root.classList.remove('dark');
-    document.body.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -167,7 +175,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const toggleTheme = () => {
-    // Lock to light mode
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   const updateCurrentUser = (updatedUser: User) => {

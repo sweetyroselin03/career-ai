@@ -8,7 +8,8 @@ import {
   PolarGrid, 
   PolarAngleAxis, 
   PolarRadiusAxis, 
-  Radar 
+  Radar,
+  Tooltip
 } from 'recharts';
 import { 
   CheckCircle, 
@@ -21,7 +22,8 @@ import { AnimatePresence } from 'framer-motion';
 import Toast from '../components/Common/Toast';
 
 const SkillAssessment: React.FC = () => {
-  const { token } = useAuth();
+  const { token, theme } = useAuth();
+  const isDark = theme === 'dark';
   
   const [profileSkills, setProfileSkills] = useState<{ [key: string]: number }>({});
   const [availableSkills, setAvailableSkills] = useState<any[]>([]);
@@ -29,6 +31,13 @@ const SkillAssessment: React.FC = () => {
   
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Dynamic Chart Theme settings
+  const gridColor = isDark ? 'rgba(51, 65, 85, 0.4)' : '#E2E8F0';
+  const labelColor = isDark ? '#94A3B8' : '#475569';
+  const tooltipBg = isDark ? '#0F172A' : '#FFFFFF';
+  const tooltipBorder = isDark ? '#1E293B' : '#E2E8F0';
+  const tooltipTextColor = isDark ? '#F1F5F9' : '#0F172A';
 
   // Fetch all available skills and user's profile
   useEffect(() => {
@@ -132,8 +141,8 @@ const SkillAssessment: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">Interactive Skill Assessment</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Interactive Skill Assessment</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Rate your technical and soft skill metrics to compile your professional profile radar web
           </p>
         </div>
@@ -163,13 +172,13 @@ const SkillAssessment: React.FC = () => {
           <div className="glass-card p-6 space-y-6">
             
             {/* Category tabs */}
-            <div className="flex border-b border-slate-100 dark:border-slate-850 pb-1">
+            <div className="flex border-b border-slate-200 dark:border-slate-800 pb-1">
               <button
                 onClick={() => setActiveCategory('technical')}
                 className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 px-4 transition-all ${
                   activeCategory === 'technical'
                     ? 'border-primary text-primary'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
+                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Technical Capabilities
@@ -179,7 +188,7 @@ const SkillAssessment: React.FC = () => {
                 className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 px-4 transition-all ${
                   activeCategory === 'soft'
                     ? 'border-primary text-primary'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
+                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Soft Skills & Leadership
@@ -189,14 +198,14 @@ const SkillAssessment: React.FC = () => {
             {/* Sliders list */}
             <div className="space-y-5">
               {categorizedSkills.length === 0 ? (
-                <p className="text-xs text-slate-450 italic">No skills registered in database.</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 italic">No skills registered in database.</p>
               ) : (
                 categorizedSkills.map(sk => {
                   const val = profileSkills[sk.name] || 0;
                   return (
                     <div key={sk.name} className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{sk.name}</span>
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-300">{sk.name}</span>
                         <span className="text-xs font-extrabold text-primary">{val}%</span>
                       </div>
                       <input
@@ -206,7 +215,7 @@ const SkillAssessment: React.FC = () => {
                         step="5"
                         value={val}
                         onChange={(e) => handleSliderChange(sk.name, parseInt(e.target.value))}
-                        className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary"
+                        className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary"
                       />
                     </div>
                   );
@@ -222,7 +231,7 @@ const SkillAssessment: React.FC = () => {
           
           {/* Skill Web visualization */}
           <div className="glass-card p-6 space-y-4 text-center">
-            <h3 className="font-bold text-xs text-slate-500 dark:text-slate-455 uppercase tracking-wider">
+            <h3 className="font-bold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               Profile Skill Web
             </h3>
             
@@ -230,9 +239,9 @@ const SkillAssessment: React.FC = () => {
               <div className="h-60 w-full flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                    <PolarGrid stroke="#334155" opacity={0.3} />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 9 }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 8 }} />
+                    <PolarGrid stroke={gridColor} opacity={0.6} />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: labelColor, fontSize: 9, fontWeight: 'semibold' }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: labelColor, fontSize: 8 }} />
                     <Radar
                       name="User"
                       dataKey="value"
@@ -240,33 +249,34 @@ const SkillAssessment: React.FC = () => {
                       fill="#2563EB"
                       fillOpacity={0.25}
                     />
+                    <Tooltip contentStyle={{ background: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: '12px', fontSize: '11px', color: tooltipTextColor, boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-60 flex flex-col items-center justify-center border border-dashed border-slate-800 rounded-2xl p-4">
-                <HelpCircle className="w-8 h-8 text-slate-500 animate-pulse mb-2" />
-                <p className="text-[11px] text-slate-500">
+              <div className="h-60 flex flex-col items-center justify-center border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl p-4">
+                <HelpCircle className="w-8 h-8 text-slate-400 dark:text-slate-700 animate-pulse mb-2" />
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">
                   Rate at least 3 skills to render radar web analysis chart.
                 </p>
               </div>
             )}
 
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-850 flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-bold">Average Skill Index</span>
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-xs text-slate-700 dark:text-slate-300 font-bold">Average Skill Index</span>
               <span className="text-xl font-black text-primary">{averageSkillScore}%</span>
             </div>
           </div>
 
           {/* Strengths & Improvement panel */}
           <div className="glass-card p-6 space-y-4">
-            <h3 className="font-bold text-xs text-slate-500 dark:text-slate-455 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850 pb-2">
+            <h3 className="font-bold text-xs text-slate-750 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2">
               Capabilities Report
             </h3>
 
             {/* Strengths */}
             <div className="space-y-2">
-              <h4 className="text-xs font-bold text-emerald-500 flex items-center space-x-1.5">
+              <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-500 flex items-center space-x-1.5">
                 <CheckCircle className="w-4 h-4" />
                 <span>Strength Areas (≥70%)</span>
               </h4>
@@ -279,13 +289,13 @@ const SkillAssessment: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-[10px] text-slate-450 italic">None identified yet.</p>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 italic">None identified yet.</p>
               )}
             </div>
 
             {/* Improvements */}
             <div className="space-y-2 pt-2">
-              <h4 className="text-xs font-bold text-rose-500 flex items-center space-x-1.5">
+              <h4 className="text-xs font-bold text-rose-600 dark:text-rose-500 flex items-center space-x-1.5">
                 <AlertCircle className="w-4 h-4" />
                 <span>Improvement Areas (&lt;50%)</span>
               </h4>
@@ -298,7 +308,7 @@ const SkillAssessment: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-[10px] text-slate-455 italic">None identified yet.</p>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 italic">None identified yet.</p>
               )}
             </div>
 

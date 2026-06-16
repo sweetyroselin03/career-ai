@@ -20,7 +20,7 @@
   --color-text-primary: #0F172A;
   --color-text-secondary: #475569;
 
-  /* Keep slate shades mapping for compatibility, mapped to light theme friendly tints */
+  /* Slate shades mapping for compatibility */
   --color-slate-350: #475569;
   --color-slate-450: #64748B;
   --color-slate-455: #475569;
@@ -34,40 +34,86 @@
 
 @layer base {
   body {
-    @apply antialiased font-sans text-slate-800 transition-colors duration-300;
+    @apply antialiased font-sans transition-colors duration-300;
     background-color: #F8FAFC;
     color: #0F172A;
   }
+  
+  html.dark body {
+    background-color: #0A0F1D;
+    color: #F1F5F9;
+  }
+  
+  /* Make all text elements match high-contrast dark theme */
+  html.dark p {
+    @apply text-slate-300;
+  }
 }
 
-/* Glassmorphism Styles Redefined for Light Theme */
+/* Glassmorphism Styles */
 .glass-card {
-  @apply bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.06)] rounded-2xl;
+  @apply bg-white border border-slate-200 shadow-sm rounded-2xl transition-all duration-300;
+}
+
+html.dark .glass-card {
+  background-color: #0F172A;
+  border-color: #1E293B;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
 .glass-card-hover {
-  @apply transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-white;
+  @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+}
+
+html.dark .glass-card-hover:hover {
+  background-color: #1E293B;
 }
 
 .glass-panel {
-  @apply bg-white border border-slate-200 shadow-xl rounded-3xl;
+  @apply bg-white border border-slate-200 shadow-sm rounded-3xl;
 }
 
-/* Interactive Elements */
+html.dark .glass-panel {
+  background-color: #0F172A;
+  border-color: #1E293B;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Interactive Buttons */
 .btn-primary {
-  @apply bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-2.5 rounded-xl shadow-md shadow-primary/10 hover:shadow-primary/20 transition-all duration-300 active:scale-95 cursor-pointer;
+  @apply bg-primary hover:bg-primary-dark text-white font-bold px-6 py-2.5 rounded-xl shadow-md shadow-primary/10 hover:shadow-primary/25 transition-all duration-300 active:scale-95 cursor-pointer;
 }
 
 .btn-secondary {
-  @apply bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-all duration-300 active:scale-95 cursor-pointer;
+  @apply bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold px-6 py-2.5 rounded-xl shadow-sm transition-all duration-300 active:scale-95 cursor-pointer;
+}
+
+html.dark .btn-secondary {
+  background-color: rgba(15, 23, 42, 0.65);
+  border-color: rgba(30, 41, 59, 0.9);
+  color: #E2E8F0;
+}
+
+html.dark .btn-secondary:hover {
+  background-color: rgba(30, 41, 59, 0.8);
 }
 
 .btn-accent {
-  @apply bg-secondary hover:bg-secondary-dark text-white font-semibold px-6 py-2.5 rounded-xl shadow-md shadow-secondary/10 hover:shadow-secondary/20 transition-all duration-300 active:scale-95 cursor-pointer;
+  @apply bg-secondary hover:bg-secondary-dark text-white font-bold px-6 py-2.5 rounded-xl shadow-md shadow-secondary/10 hover:shadow-secondary/25 transition-all duration-300 active:scale-95 cursor-pointer;
 }
 
 .form-input {
   @apply w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 text-slate-900 placeholder-slate-400;
+}
+
+html.dark .form-input {
+  background-color: rgba(10, 15, 30, 0.85);
+  border-color: rgba(30, 41, 59, 0.9);
+  color: #F8FAFC;
+}
+
+html.dark .form-input::placeholder {
+  color: #475569;
 }
 
 /* Custom Scrollbars */
@@ -84,7 +130,15 @@
   @apply bg-slate-200 rounded-full hover:bg-slate-350;
 }
 
-/* Background animated mesh effects - Soft Light Mode Mesh */
+html.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(30, 41, 59, 0.8);
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(51, 65, 85, 0.9);
+}
+
+/* Animated mesh background */
 .bg-mesh {
   position: fixed;
   top: 0;
@@ -103,8 +157,12 @@
   height: 50vw;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.08;
+  opacity: 0.06;
   transition: all 1s ease-in-out;
+}
+
+html.dark .bg-mesh::before, html.dark .bg-mesh::after {
+  opacity: 0.15;
 }
 
 .bg-mesh::before {
@@ -118,4 +176,3 @@
   right: -10%;
   background: radial-gradient(circle, #60a5fa 0%, transparent 80%);
 }
-
