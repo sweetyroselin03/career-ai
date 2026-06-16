@@ -460,3 +460,21 @@ def upload_document(session_id):
             "data": None
         }), 500
 
+
+@chatbot_bp.route('/message', methods=['POST'])
+@jwt_required()
+def chatbot_message():
+    data = request.get_json() or {}
+    message = data.get('message', '').strip()
+    if not message:
+        return jsonify({"response": "Message cannot be empty."}), 400
+    try:
+        system_prompt = "You are a career advisory AI assistant."
+        chat_history = [{"role": "user", "content": message}]
+        reply = groq_service.generate_chat_response(system_prompt, chat_history)
+        return jsonify({"response": reply}), 200
+    except Exception as e:
+        logger.error(f"[CHATBOT] general chatbot/message route failed: {e}")
+        return jsonify({"response": f"Failed to get response: {str(e)}"}), 500
+
+

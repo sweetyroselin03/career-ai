@@ -38,12 +38,6 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // OTP Login fields
-  const [loginMode, setLoginMode] = useState<'password' | 'otp'>('password');
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,37 +50,6 @@ const Login: React.FC = () => {
     }
   }, []);
 
-  const handleSendOtp = async () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setToast({ message: 'Please enter a valid email address first.', type: 'error' });
-      return;
-    }
-    setIsSendingOtp(true);
-    setToast(null);
-    try {
-      const res = await fetch(`${API_URL}/api/auth/send-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, purpose: 'login' }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.msg || 'Failed to send OTP.');
-      }
-      setOtpSent(true);
-      setToast({ message: 'Login OTP code sent successfully!', type: 'success' });
-    } catch (err: any) {
-      console.error("[Login SendOtp Error]", err);
-      const msg = err.message === 'Failed to fetch'
-        ? `Failed to connect to backend at ${API_URL}/api/auth/send-otp. Please ensure the backend is running and CORS is configured.`
-        : err.message || 'Failed to send OTP.';
-      setToast({ message: msg, type: 'error' });
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setToast(null);
@@ -97,38 +60,18 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (loginMode === 'password' && password.length < 6) {
+    if (password.length < 6) {
       setToast({ message: 'Password must be at least 6 characters.', type: 'error' });
       return;
     }
 
-    if (loginMode === 'otp') {
-      if (!otpSent) {
-        setToast({ message: 'Please send and verify the OTP code first.', type: 'error' });
-        return;
-      }
-      if (otp.trim().length !== 6) {
-        setToast({ message: 'OTP must be a 6-digit number.', type: 'error' });
-        return;
-      }
-    }
-
     setIsSubmitting(true);
     try {
-      let res;
-      if (loginMode === 'password') {
-        res = await fetch(`${API_URL}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-      } else {
-        res = await fetch(`${API_URL}/api/auth/login-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, otp })
-        });
-      }
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
       const data = await res.json();
       console.log("[DEBUG] Login response received:", { status: res.status, hasToken: !!data.access_token, hasUser: !!data.user });
@@ -151,9 +94,8 @@ const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (err: any) {
       console.error("[Login Submit Error]", err);
-      const endpoint = loginMode === 'password' ? 'login' : 'login-otp';
       const msg = err.message === 'Failed to fetch'
-        ? `Failed to connect to backend at ${API_URL}/api/auth/${endpoint}. Please ensure the backend is running and CORS is configured.`
+        ? `Failed to connect to backend at ${API_URL}/api/auth/login. Please ensure the backend is running and CORS is configured.`
         : err.message || 'Network error occurred.';
       setToast({ message: msg, type: 'error' });
     } finally {
@@ -206,112 +148,58 @@ const Login: React.FC = () => {
             <p className="text-[16px] text-[#64748B] mt-2.5 font-medium max-w-sm">
               Log in to navigate your career path
             </p>
-          </div>          {/* Toggle between Password and OTP Login Modes */}
-          <div className="flex bg-slate-100 p-1.5 rounded-xl mb-6 border border-slate-200">
-            <button
-              type="button"
-              onClick={() => { setLoginMode('password'); setToast(null); }}
-              className={`flex-1 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer ${loginMode === 'password' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-            >
-              Password Login
-            </button>
-            <button
-              type="button"
-              onClick={() => { setLoginMode('otp'); setToast(null); }}
-              className={`flex-1 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer ${loginMode === 'otp' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-            >
-              Secure OTP Login
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+          </div>          <form onSubmit={handleSubmit} className="space-y-6">
             
             {/* Email Input */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-[#64748B] uppercase tracking-wider block">Email Address</label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-[20px] h-[20px] text-[#64748B]" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="name@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-[56px] bg-white border border-[#D1D5DB] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/15 rounded-[14px] pl-12 pr-4 text-base text-slate-900 placeholder-[#64748B]/50 transition-all duration-200 outline-none"
-                  />
+              <div className="relative w-full">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="w-[20px] h-[20px] text-[#64748B]" />
                 </div>
-                {loginMode === 'otp' && (
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    disabled={isSendingOtp}
-                    className="h-[56px] px-4 bg-slate-150 hover:bg-slate-200 text-slate-800 font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center text-xs whitespace-nowrap min-w-[100px] border border-slate-250 shadow-xs"
-                  >
-                    {isSendingOtp ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
-                  </button>
-                )}
+                <input
+                  type="email"
+                  required
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-[56px] bg-white border border-[#D1D5DB] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/15 rounded-[14px] pl-12 pr-4 text-base text-slate-900 placeholder-[#64748B]/50 transition-all duration-200 outline-none"
+                />
               </div>
             </div>
 
-            {/* Password Input (Only in Password mode) */}
-            {loginMode === 'password' && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-[#64748B] uppercase tracking-wider block">Password</label>
-                  <Link to="/forgot-password" className="text-xs text-[#2563EB] font-semibold hover:underline hover:text-[#3B82F6] transition-colors flex items-center space-x-1">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>Forgot password?</span>
-                  </Link>
-                </div>
-                <div className="relative w-full">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-[20px] h-[20px] text-[#64748B]" />
-                  </div>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-[56px] bg-white border border-[#D1D5DB] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/15 rounded-[14px] pl-12 pr-12 text-base text-slate-900 placeholder-[#64748B]/50 transition-all duration-200 outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#64748B] hover:text-[#2563EB] transition-colors focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
-                  </button>
-                </div>
+            {/* Password Input */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#64748B] uppercase tracking-wider block">Password</label>
+                <Link to="/forgot-password" className="text-xs text-[#2563EB] font-semibold hover:underline hover:text-[#3B82F6] transition-colors flex items-center space-x-1">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Forgot password?</span>
+                </Link>
               </div>
-            )}
+              <div className="relative w-full">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="w-[20px] h-[20px] text-[#64748B]" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-[56px] bg-white border border-[#D1D5DB] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/15 rounded-[14px] pl-12 pr-12 text-base text-slate-900 placeholder-[#64748B]/50 transition-all duration-200 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#64748B] hover:text-[#2563EB] transition-colors focus:outline-none"
+                >
+                  {showPassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
+                </button>
+              </div>
+            </div>
 
-            {/* OTP Input (Only in OTP mode when sent) */}
-            {loginMode === 'otp' && otpSent && (
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-[#64748B] uppercase tracking-wider block">6-Digit Login OTP</label>
-                <div className="relative w-full">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-[20px] h-[20px] text-[#64748B]" />
-                  </div>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    required
-                    placeholder="123456"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                    className="w-full h-[56px] bg-white border border-[#D1D5DB] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/15 rounded-[14px] pl-12 pr-4 text-base text-slate-900 placeholder-[#64748B]/50 transition-all duration-200 outline-none"
-                  />
-                </div>
-                <p className="text-xs text-emerald-600 font-semibold">
-                  ✓ Code has been sent to your email. Check spam if not received.
-                </p>
-              </div>
-            )}
+
 
             {/* Remember Me */}
             <div className="flex items-center py-1">

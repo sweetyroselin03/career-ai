@@ -15,16 +15,24 @@ def create_app(config_class='config.Config'):
     # -----------------------------------------------------------
     # CORS: support dev (5173, 5174) + production Vercel frontend
     # -----------------------------------------------------------
+    origins = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://career-ai-rho-rouge.vercel.app",
+        "https://career-ai-git-main-sweetyroselin03-projects.vercel.app",
+        "https://career-ai-git-main-sweetyroselin03s-projects.vercel.app",
+        "https://career-6nyu3fe8g-sweetyroselin03-projects.vercel.app"
+    ]
+    frontend_url = os.environ.get("FRONTEND_URL")
+    if frontend_url:
+        origins.append(frontend_url)
+        if frontend_url.endswith('/'):
+            origins.append(frontend_url[:-1])
+
     CORS(
         app,
         resources={r"/*": {
-            "origins": [
-                "http://localhost:5173",
-                "http://localhost:5174",
-                "https://career-ai-rho-rouge.vercel.app",
-                "https://career-ai-git-main-sweetyroselin03-projects.vercel.app",
-                "https://career-6nyu3fe8g-sweetyroselin03-projects.vercel.app"
-            ],
+            "origins": origins,
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
         }},
@@ -108,13 +116,8 @@ def create_app(config_class='config.Config'):
             tables = inspector.get_table_names()
             print(f"[STARTUP] Tables: {', '.join(tables)}")
 
-            # Startup Diagnostics
-            from flask import current_app
-            print(f"[STARTUP DIAGNOSTICS] Current app name: {current_app.name}")
-            print(f"[STARTUP DIAGNOSTICS] Registered blueprints: {list(current_app.blueprints.keys())}")
-            print("[STARTUP DIAGNOSTICS] Registered URL Map rules:")
-            for rule in current_app.url_map.iter_rules():
-                print(f"  {rule}")
+            # Diagnostics moved to end of create_app
+            pass
 
         except Exception as e:
             print(f"[STARTUP ERROR] Database init failed: {e}")
@@ -233,6 +236,7 @@ def create_app(config_class='config.Config'):
     from app.routes.chatbot import chatbot_bp
     from app.routes.admin import admin_bp
     from app.routes.ai import ai_bp
+    from app.routes.health import health_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(profile_bp, url_prefix='/api/profile')
@@ -241,6 +245,7 @@ def create_app(config_class='config.Config'):
     app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(ai_bp, url_prefix='/api/ai')
+    app.register_blueprint(health_bp, url_prefix='/api')
 
     # -----------------------------------------------------------
     # Utility routes
@@ -248,21 +253,6 @@ def create_app(config_class='config.Config'):
     @app.route("/")
     def home():
         return {"status": "ok", "message": "CareerAI Backend Running"}
-
-    @app.route("/api/health")
-    def health():
-        # Actually test DB connectivity
-        db_status = "connected"
-        try:
-            db.session.execute(db.text('SELECT 1'))
-            db.session.commit()
-        except Exception as e:
-            db_status = f"error: {str(e)[:100]}"
-        return {
-            "status": "healthy",
-            "database": db_status,
-            "message": "CareerAI Navigator API is online"
-        }
 
     @app.route("/debug-render")
     def debug_render():
@@ -273,10 +263,54 @@ def create_app(config_class='config.Config'):
 
     @app.route("/deployment-check")
     def deployment_check():
+        routes_count = len(list(app.url_map.iter_rules()))
         return {
             "status": "ok",
             "environment": "render",
-            "app": "career-ai"
+            "routes_count": routes_count
         }
+
+    # -----------------------------------------------------------
+    # Startup Validation & Diagnostics
+    # -----------------------------------------------------------
+    print("\n========== STARTUP VALIDATION ==========")
+    
+    # A. Environment variable validation
+    required_vars = [
+        "DATABASE_URL",
+        "SECRET_KEY",
+        "JWT_SECRET_KEY",
+        "GROQ_API_KEY"
+    ]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    if missing_vars:
+        print(f"[VALIDATION WARNING] Missing environment variables: {', '.join(missing_vars)}")
+    else:
+        print("[VALIDATION] All required environment variables are set.")
+
+    # B. Blueprint registration test
+    required_blueprints = ["auth", "profile", "ai", "admin", "health"]
+    registered_blueprints = list(app.blueprints.keys())
+    missing_blueprints = [bp for bp in required_blueprints if bp not in registered_blueprints]
+    if missing_blueprints:
+        print(f"[VALIDATION ERROR] Missing required blueprints: {', '.join(missing_blueprints)}")
+    else:
+        print("[VALIDATION] All required blueprints are registered.")
+
+    # C. Database connection test
+    with app.app_context():
+        try:
+            db.session.execute(db.text('SELECT 1'))
+            db.session.commit()
+            print("[VALIDATION] Database connection check: SUCCESS")
+        except Exception as db_err:
+            print(f"[VALIDATION ERROR] Database connection check: FAILED. Error: {db_err}")
+            
+    print("========================================\n")
+
+    print("========== REGISTERED URL ROUTES ==========")
+    for rule in app.url_map.iter_rules():
+        print(f"  {rule.endpoint} -> {rule}")
+    print("===========================================\n")
 
     return app

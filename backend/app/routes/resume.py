@@ -169,6 +169,8 @@ def upload_resume():
     return jsonify({
         "success": True,
         "message": "Resume uploaded and analyzed successfully.",
+        "filename": file.filename,
+        "analysis": analysis_results,
         "data": {
             "filename": file.filename,
             "analysis": analysis_results

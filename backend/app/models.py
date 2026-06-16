@@ -478,28 +478,6 @@ class ChatMessage(db.Model):
         }
 
 
-class UserOTP(db.Model):
-    __tablename__ = 'user_otps'
-    
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    email: Mapped[str] = mapped_column(db.String(120), nullable=False)
-    otp: Mapped[str] = mapped_column(db.String(6), nullable=False)
-    purpose: Mapped[str] = mapped_column(db.String(50), nullable=False) # 'register', 'login', 'forgot_password'
-    created_at: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
-    expires_at: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)
-    verified: Mapped[bool] = mapped_column(db.Boolean, default=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'purpose': self.purpose,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'expires_at': self.expires_at.isoformat() if self.expires_at else None,
-            'verified': self.verified
-        }
-
-
 class UploadedDocument(db.Model):
     __tablename__ = 'uploaded_documents'
     

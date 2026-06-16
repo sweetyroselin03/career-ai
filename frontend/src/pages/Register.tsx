@@ -43,10 +43,7 @@ const Register: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // OTP Fields
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
+
 
   // Form Fields
   const [name, setName] = useState('');
@@ -118,44 +115,12 @@ const Register: React.FC = () => {
   const strengthInfo = getStrengthLabel(strengthScore);
 
   // Handlers for validation
-  const handleSendOtp = async () => {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setToast({ message: 'Please enter a valid email address first.', type: 'error' });
-      return;
-    }
-    setIsSendingOtp(true);
-    setToast(null);
-    try {
-      const res = await fetch(`${API_URL}/api/auth/send-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, purpose: 'register' }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.msg || 'Failed to send OTP.');
-      }
-      setOtpSent(true);
-      setToast({ message: 'Verification OTP sent to your email!', type: 'success' });
-    } catch (err: any) {
-      console.error("[Register SendOtp Error]", err);
-      const msg = err.message === 'Failed to fetch'
-        ? `Failed to connect to backend at ${API_URL}/api/auth/send-otp. Please ensure the backend is running and CORS is configured.`
-        : err.message || 'Failed to send OTP.';
-      setToast({ message: msg, type: 'error' });
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
   const validateStep0 = () => {
     if (!name.trim()) return 'Name is required.';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return 'Enter a valid email address.';
     const phoneRegex = /^\+?[0-9]{7,15}$/;
     if (mobile && !phoneRegex.test(mobile)) return 'Enter a valid phone number.';
-    if (!otpSent) return 'Please request and enter the email verification OTP.';
-    if (otp.trim().length !== 6) return 'Verification OTP must be a 6-digit number.';
     return null;
   };
 
@@ -217,15 +182,14 @@ const Register: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // 1. Submit Core User Registration with OTP
-      const regRes = await fetch(`${API_URL}/api/auth/register-otp`, {
+      // 1. Submit Core User Registration
+      const regRes = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
           email,
           password,
-          otp,
           mobile,
           qualification,
           currentStatus
@@ -407,49 +371,18 @@ const Register: React.FC = () => {
 
                   <div className="flex flex-col gap-3">
                     <label className={labelClass}>Email Address</label>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                        <input
-                          type="email"
-                          required
-                          placeholder="johndoe@email.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className={inputClass}
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={isSendingOtp}
-                        className="h-[56px] px-4 bg-slate-150 hover:bg-slate-200 text-slate-800 font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center text-xs whitespace-nowrap min-w-[100px] border border-slate-250"
-                      >
-                        {isSendingOtp ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
-                      </button>
+                    <div className="relative w-full">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                      <input
+                        type="email"
+                        required
+                        placeholder="johndoe@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={inputClass}
+                      />
                     </div>
                   </div>
-
-                  {otpSent && (
-                    <div className="flex flex-col gap-3">
-                      <label className={labelClass}>6-Digit Verification OTP</label>
-                      <div className="relative w-full">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                        <input
-                          type="text"
-                          maxLength={6}
-                          required
-                          placeholder="123456"
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                          className={inputClass}
-                        />
-                      </div>
-                      <p className="text-xs text-emerald-600 font-semibold">
-                        ✓ Verification code has been sent to your email.
-                      </p>
-                    </div>
-                  )}
 
 
                   <div className="flex flex-col gap-3">
